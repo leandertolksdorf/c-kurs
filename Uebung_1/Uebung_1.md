@@ -1,3 +1,33 @@
+# TI3: Betriebs- und Kommunikationssysteme
+
+## 1. Übungsblatt
+
+### Simon Franke, Leander Tolksdorf
+
+#### Aufgabe 1.1
+
+a) Prozesse: Gruppieren von Prozessen in process states (running, pending, blocked) macht Multitasking möglich und erhöht die Effizienz.
+
+b) Virtueller Speicher: Verwaltet durch die Memory Management Unit (MMU). Vorteile sind: Höhere Effizienz, Sicherheit und Unabhängigkeit von der Speicherarchitektur
+
+c) Datei: Verwaltet durch ein Dateisystem. 
+
+d) Ports: Ermöglicht mehrere Verbindungen über die selbe IP-Adresse.
+
+#### Aufgabe 1.2
+
+Die Trennung der Protection Rings wird durch Speichervirtualisierung erreicht. Sie verhindert, dass Prozesse unberechtigt auf bestimmte Speicherbereiche oder andere Prozesse zugreift. 
+Der Wechsel zwischen Protection Rings heißt *Context switch*. Beispiele, die einen context switch auslösen können, sind:
+ - Interrupts: 
+ - Multitasking
+
+#### Aufgabe 1.3
+
+#### Aufgabe 1.4
+
+
+#### Aufgabe 2
+```c
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,3 +66,4 @@ int main(int argc, char const *argv[]) {
 
     return 0;
 }
+```
