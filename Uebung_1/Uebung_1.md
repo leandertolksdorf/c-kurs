@@ -18,10 +18,14 @@ d) Ports: Ermöglicht mehrere Verbindungen über die selbe IP-Adresse.
 
 Die Trennung der Protection Rings wird durch Speichervirtualisierung erreicht. Sie verhindert, dass Prozesse unberechtigt auf bestimmte Speicherbereiche oder andere Prozesse zugreift. 
 Der Wechsel zwischen Protection Rings heißt *Context switch*. Beispiele, die einen context switch auslösen können, sind:
- - Interrupts: 
+ - Interrupts 
  - Multitasking
 
 #### Aufgabe 1.3
+
+In der Microkernel-Architektur sind (unterschiedlich) viele Komponenten ausgelagert. Die Schnittstellen zwischen den verschiedenen Komponenten müssen deshalb genau definiert sein. Die Gerätetreiber, das Dateisystem, die Anwendungs-IPC und andere Komponenten, die sich beim Monolithischen Kernel im Kernel befinden (und damit im Kernel-Modus) befinden sich beim Mikrokernel im Benutzer-Modus. Dadurch sind auch die Zugriffsrechte z.B. der Treiber, deutlich variabler. Verschiedene Services (wie Webserver) lassen sich dann auch ohne Kernel-Zugriffsrechte verwalten und verwenden. 
+
+Syscalls, als Zugriff vom User-Mode auf den Kernel-Mode, finden also beim Mikrokernel beispielsweise zwischen den Gerätetreibern und dem eigentlichen Kernel statt, beim Monolitischem System zwischen den Anwendungen (User-Mode) und dem Kernel (z.B. Treibern)
 
 #### Aufgabe 1.4
 
