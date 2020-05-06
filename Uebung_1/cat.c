@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]) {
             // Write read bytes to file-descriptor 1 (stdout).
             write(1, buf, readBytes);
             // Repeat until end of file.
-        } while(readBytes != 0);
+        } while(readBytes == BUFFERSIZE);
         // New line after file.
         write(1, &nl, 1);
     }
