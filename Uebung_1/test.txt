@@ -1,0 +1,201 @@
+Prof. Jochen Schiller
+Computer Systems & Telematics
+TI 3: Operating Systems and Computer Networks
+Prof. Dr.-Ing. Jochen H. Schiller
+Computer Systems & Telematics
+Freie Universität Berlin, Germany
+TI III: Operating Systems & Computer Networks
+Organization
+0.2
+Structure/content of CST-Lectures
+TI 3: Operating Systems and Computer Networks
+Telematics / Advanced Computer Networks
+Protocols, services, standards, LAN, Internet, TCP/IP, WWW, security, quality of service, DNS,
+routing, applications, IPv6, MPLS
+Computer Architecture (TI II)
+Harvard/v. Neumann, micro architecture, RISC/CISC, branch prediction, pipelining, cache,
+memory hierarchy, assembler, multi-processor systems
+Operating Systems and Computer Networks (TI III)
+Input/output, DMA/PIO, interrupts, buffer, process/thread, UNIX/Windows, networks, media
+access, protocols, TCP/IP, Internet
+Basics of Computer Systems (TI I)
+Boolean algebra, circuits, minimization, gates, memory, semiconductors, transistors, CMOS,
+AD/DA conversion
+Microprocessor Lab
+Programming of embedded systems, IoT,
+mobile/wireless devices
+Master
+Bachelor
+Seminar Computer Systems
+Presentation & discussion of current topics from all
+lectures
+Modeling and Simulation
+Modeling, Simulation and Evaluation of Systems
+SW/HW-Lab mobile, embedded Systems
+SDR, security architectures, IoT, localization, bring
+your own topic…
+Mobile Communications
+Wireless transmission, media access, GSM, 3G,
+LTE, WLAN, mobile IP, ad-hoc networks
+Computer Systems Lab (TI IV)
+Embedded systems, interfaces, drivers, operating systems, networking, integration
+Embedded Internet and the IoT
+Wireless sensor networks, wireless mesh networks,
+Internet of Things, etc.
+You
+are
+here!
+0.3
+Content
+TI 3: Operating Systems and Computer Networks
+TI 3
+Operating Systems
+Betriebssysteme
+Computer Networks
+Kommunikationssysteme
+0.
+4
+Content
+1. Introduction and Motivation - Tasks - Services - Virtual Resources - Historical Perspective - Examples - Tools
+2. Subsystems, Interrupts and System Calls - System Structure - Flow of Control - System Library - POSIX
+3. Processes - Definition - Implementation - State Model
+4. Memory - Paging & Segmentation - Virtual Memory - Swap Policies
+5. Scheduling - Types of Scheduling - Decision Modes - Process Priorities - Scheduling Policies
+6. I/O and File System - Devices - Buffering and Caching - Files and Directories
+7. Booting, Services, and Security - System Startup - System Services - Security Issues
+TI 3: Operating Systems and Computer Networks
+0.5
+Content
+8. Networked Computer & Internet
+- Sockets
+- Internet
+- Layers
+- Protocols
+9. Host-to-Network I
+- Physical Layer
+- Media
+- Signals
+- Modems
+10. Host-to-Network II
+- Data Link Layer
+- Framing, Flow Control
+- Error Detection / Correction
+- Point-to-Point Protocol
+11. Host-to-Network III
+- Topologies
+- Medium Access
+- Local Area Networks
+- Ethernet, WLAN
+12. Internetworking
+- Switches, Routers
+- Routing
+- Internet Protocol
+- Addressing
+13. Transport Layer
+- Protocol Mechanisms
+- TCP, UDP
+- Addressing, Ports
+TI 3: Operating Systems and Computer Networks
+0.6
+Content
+14. Applications
+- Domain Name System
+- Email
+- World Wide Web
+15. Network Security
+- Basic Concepts & Terms
+- Cryptology
+- Examples
+- Firewalls
+- Virtual Private Networks (VPNs)
+- IP Security
+- Email Security with PGP
+16. Example
+- Under the Hood of Surfing the Web
+TI 3: Operating Systems and Computer Networks
+Programming
+in C as part of
+the exercises
+0.7
+Course Organization
+General:
+Lecture
+- Available online
+- Flipped-classroom: Q&A, discussions, Friday, 10-12h, via
+Webex (invitations see KVV)
+Office Hours
+- Jochen Schiller: Tue 14:00-15:00,
+https://fu-berlin.webex.com/meet/jochen.schiller or via email
+- Tutors: during tutorials
+News and Updates
+- KVV course site (via announcements)
+Tutorials
+- Groups of approx. 25-30 students
+- Time depends on group
+- Registration via KVV
+Assignments:
+New assignments each week
+- Available in KVV
+Discussion
+- During the tutorials
+Practical assignments
+- @home, should work on all platforms
+- More during Q&A/tutorials
+Handing in
+Right on time!
+- Complete electronic workflow!
+- Solutions handed in too late will be ignored!
+TI 3: Operating Systems and Computer Networks
+Everything
+virtual via Webex
+meetings/events!
+0.8
+Assignments
+Übungsblätter: Available on Fridays in KVV after Q&A
+Submission: Two weeks later until start of class (Fri, 10:15)
+Discussion: Three weeks later in tutorials
+TI 3: Operating Systems and Computer Networks
+This week … next week … third week … fourth week
+Lecture Tutorials Lecture Tutorials Lecture Tutorials Lecture
+Discussion
+0.9
+Criteria for Successful Participation
+Active participation in the tutorials is essential!
+- Minimum n-2 times present
+Hand in your assignments on time
+- Teamwork is required with 2 students per team
+Successful submission of at least n-2 assignments
+Each student with a correct answer must be able to present the assignment during the tutorials
+- At least one presentation during the tutorials
+At least 50% of the max. number of points in the exam are required
+Only the exam counts for grading!
+Exam: to be announced
+TI 3: Operating Systems and Computer Networks
+0.10
+Literature
+Archive of the lectures! – see KVV for links
+- Prepare yourself! Follow the lecture BEFORE Q&A
+- Prepare a list of questions & discuss during Q&A
+The course is based on:
+- William Stallings, Operating Systems: Internals
+and Design Principles, Prentice Hall International
+- Larry L. Peterson, Bruce S. Davie, Computernetze –
+Eine systemorientierte Einführung, dpunkt Verlag
+Additional literature:
+- Andrew S. Tanenbaum, Modern Operating Systems,
+Prentice Hall
+- Abraham Silberschatz, Peter B. Galvin, Greg Gagne,
+Operating System Concepts, John Wiley & Sons
+TI 3: Operating Systems and Computer Networks
+0.11
+RIOT-OS
+TI 3: Operating Systems and Computer Networks
+The friendly Operating System for the Internet of Things.
+http://riot-os.org/
+0.12
+OS-support for HPC (Grids)
+TI III - Operating Systems and Computer Networks
+Rolls-Royce – Innovationszentrum Virtuelles Triebwerk
+Saab (Wikipedia.de)
+pump casing model (Wikipedia.de)
+Mercedes-Benz
