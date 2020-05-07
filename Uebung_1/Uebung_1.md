@@ -28,7 +28,9 @@ In der Microkernel-Architektur sind (unterschiedlich) viele Komponenten ausgelag
 Syscalls, als Zugriff vom User-Mode auf den Kernel-Mode, finden also beim Mikrokernel beispielsweise zwischen den Gerätetreibern und dem eigentlichen Kernel statt, beim Monolitischem System zwischen den Anwendungen (User-Mode) und dem Kernel (z.B. Treibern)
 
 #### Aufgabe 1.4
-
+Software-Interrupts führen (zumindest in einem Monolithischen Kernel) nicht zwangsläufig zu einem kompletten Context-Wechsel, da diese ggf. nicht zwischen den Ringen wechseln müssen. 
+Hardware-Interrupts führen immer zu einem kompletten Context-Wechsel, diese verändern den Programmcounter nicht. 
+Wenn die Hardware nested-Interupts unterstützt, kann es zu Nested-Interrupts kommen, wenn während die ISR ausgeführt wird ein Interrupt mit einer höheren Priorität erkannt wird.
 
 #### Aufgabe 2
 ```c
