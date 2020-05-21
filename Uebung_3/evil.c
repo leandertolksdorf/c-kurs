@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <time.h>
 
-#define _POSIX_C_SOURCE 199309L
+//#define _POSIX_C_SOURCE 199309L
 
 /*
 To do
@@ -48,12 +48,12 @@ int main()
     printf("Hallo");
 
     // Print PID continually.
-    // while(1){
-
-    //     //write(STDOUT_FILENO, pid, sizeof(pid));
-    //     write(STDOUT_FILENO, "Endlosschleife\n", 15);
-    //     //nanosleep(&sleep, (struct timespec *)NULL);
-    // }
+    while(1){
+        
+        //write(STDOUT_FILENO, pid, sizeof(pid));
+        write(STDOUT_FILENO, "Endlosschleife\n", 15);
+        nanosleep(&sleep, (struct timespec *)NULL);
+    }
 
     write(STDOUT_FILENO, "Endlosschleife\n", 15);
 
