@@ -1,9 +1,9 @@
-#include <stdio.h> 
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #define _POSIX_C_SOURCE 199309L
 
@@ -16,46 +16,44 @@ To do
 // Define handlers for SIGINT and SIGTERM
 
 void sigIntHandler(int sigNum) {
-    (void) sigNum;
-    printf("sigIntHandler: Böse Nachricht\n");
+  (void)sigNum;
+  printf("sigIntHandler: Böse Nachricht\n");
 }
 
 void sigTermHandler(int sigNum) {
-    (void) sigNum;
-    printf("sigTermHandler: Böse Nachricht\n");
+  (void)sigNum;
+  printf("sigTermHandler: Böse Nachricht\n");
 }
 
-int main()
-{
-    // Define structs for SIGINT- and SIGTERM-handling.
-    struct sigaction sigInt;
-    struct sigaction sigTerm;
-    struct timespec sleep;
+int main() {
+  int pid = getpid();
+  printf("pid: %i\n", pid);
 
-    // Set sa_handler to corresponding handler-functions.
-    sigInt.sa_handler = &sigIntHandler;
-    sigTerm.sa_handler = &sigTermHandler;
+  // Define structs for SIGINT- and SIGTERM-handling.
+  struct sigaction sigInt;
+  struct sigaction sigTerm;
+  struct timespec sleep;
 
-    // Set sleep time to 2 seconds.
-    sleep.tv_sec = 2;
-    sleep.tv_nsec = 0;
+  // Set sa_handler to corresponding handler-functions.
+  sigInt.sa_handler = &sigIntHandler;
+  sigTerm.sa_handler = &sigTermHandler;
 
-    // Declare procedure on SIGINT and SIGTERM-signals.
-    sigaction(SIGINT, &sigInt, NULL);
-    sigaction(SIGTERM, &sigTerm, NULL);
+  // Set sleep time to 2 seconds.
+  sleep.tv_sec = 2;
+  sleep.tv_nsec = 0;
 
-    int pid = getpid();
-    printf("Hallo");
+  // Declare procedure on SIGINT and SIGTERM-signals.
+  sigaction(SIGINT, &sigInt, NULL);
+  sigaction(SIGTERM, &sigTerm, NULL);
 
-    // Print PID continually.
-    // while(1){
-
-    //     //write(STDOUT_FILENO, pid, sizeof(pid));
-    //     write(STDOUT_FILENO, "Endlosschleife\n", 15);
-    //     //nanosleep(&sleep, (struct timespec *)NULL);
-    // }
-
+  // Print PID continually.
+  while (1) {
+    write(STDOUT_FILENO, pid, sizeof(pid));
     write(STDOUT_FILENO, "Endlosschleife\n", 15);
+    nanosleep(&sleep, (struct timespec *)NULL);
+  }
 
-    return 0;
+  //   write(STDOUT_FILENO, "Endlosschleife\n", 15);
+
+  return 0;
 }
