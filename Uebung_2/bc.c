@@ -17,11 +17,16 @@ int calc(int op1, char op, int op2) {
 
 void readStdin() {
     int op1, op2, result;
+    char* trash;
     char op;
     while(1) {
-        scanf("%d %c %d", &op1, &op, &op2);
+        int readItems = scanf("%d %c %d", &op1, &op, &op2);
+        if(readItems != 3) {
+            printf("Wrong input\n");
+            break;
+        }
         result = calc(op1, op, op2);
-        printf("%d", result);
+        printf("%d\n", result);
     }
 }
 
