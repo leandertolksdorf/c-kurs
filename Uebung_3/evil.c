@@ -27,7 +27,7 @@ void sigTermHandler(int sigNum) {
 
 int main() {
   int pid = getpid();
-  printf("pid: %i\n", pid);
+  printf("Dies ist eine PID:\n\tPID: %i\n", pid);
 
   // Define structs for SIGINT- and SIGTERM-handling.
   struct sigaction sigInt;
