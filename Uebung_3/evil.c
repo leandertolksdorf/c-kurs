@@ -5,13 +5,12 @@
 #include <signal.h>
 #include <time.h>
 
-#define _OPEN_SYS_ITOA_EXT
 #define _POSIX_C_SOURCE 199309L
 
 /*
 To do
-- Print PID using write at the beginning?
 - Convert handler prints to write calls.
+
 */
 
 // Define handlers for SIGINT and SIGTERM
@@ -26,11 +25,8 @@ void sigTermHandler(int sigNum) {
     printf("sigTermHandler: Böse Nachricht\n");
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
-    const void *pid = getpid();
-
-    printf("%d", pid);
     // Define structs for SIGINT- and SIGTERM-handling.
     struct sigaction sigInt;
     struct sigaction sigTerm;
@@ -48,12 +44,18 @@ int main(int argc, char const *argv[])
     sigaction(SIGINT, &sigInt, NULL);
     sigaction(SIGTERM, &sigTerm, NULL);
 
+    int pid = getpid();
+    printf("Hallo");
+
     // Print PID continually.
-    while(1){
-        write(STDOUT_FILENO, pid, sizeof(pid));
-        write(STDOUT_FILENO, "Endlosschleife\n", 15);
-        nanosleep(&sleep, (struct timespec *)NULL);
-    }
+    // while(1){
+
+    //     //write(STDOUT_FILENO, pid, sizeof(pid));
+    //     write(STDOUT_FILENO, "Endlosschleife\n", 15);
+    //     //nanosleep(&sleep, (struct timespec *)NULL);
+    // }
+
+    write(STDOUT_FILENO, "Endlosschleife\n", 15);
 
     return 0;
 }
