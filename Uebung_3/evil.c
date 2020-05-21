@@ -1,3 +1,9 @@
+/*
+TI3: 3. Übungsblatt - Aufgabe 2
+Bearbeiter: Simon Franke, Leander Tolksdorf
+Tutor: Leon Dirmeier
+*/
+
 #define _POSIX_C_SOURCE 199309L
 
 #include <stdio.h> 
@@ -17,7 +23,7 @@ void sigIntHandler(int sigNum) {
 
 void sigTermHandler(int sigNum) {
     (void) sigNum;
-    char* msg = "sigTermHandler: Böse Nachricht\n";
+    char* msg = "sigTermHandler: Bösere Nachricht\n";
     write(STDOUT_FILENO, msg, strlen(msg));
 }
 
