@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 199309L
+
 #include <stdio.h> 
 #include <string.h>
 #include <stdlib.h>
@@ -5,24 +7,18 @@
 #include <signal.h>
 #include <time.h>
 
-//#define _POSIX_C_SOURCE 199309L
-
-/*
-To do
-- Convert handler prints to write calls.
-
-*/
-
 // Define handlers for SIGINT and SIGTERM
 
 void sigIntHandler(int sigNum) {
     (void) sigNum;
-    printf("sigIntHandler: Böse Nachricht\n");
+    char* msg = "sigIntHandler: Böse Nachricht\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
 }
 
 void sigTermHandler(int sigNum) {
     (void) sigNum;
-    printf("sigTermHandler: Böse Nachricht\n");
+    char* msg = "sigTermHandler: Böse Nachricht\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
 }
 
 int main()
@@ -44,18 +40,11 @@ int main()
     sigaction(SIGINT, &sigInt, NULL);
     sigaction(SIGTERM, &sigTerm, NULL);
 
-    int pid = getpid();
-    printf("Hallo");
-
     // Print PID continually.
     while(1){
-        
-        //write(STDOUT_FILENO, pid, sizeof(pid));
-        write(STDOUT_FILENO, "Endlosschleife\n", 15);
+        printf("PID: %d | Endlosschleife\n", getpid());
         nanosleep(&sleep, (struct timespec *)NULL);
     }
-
-    write(STDOUT_FILENO, "Endlosschleife\n", 15);
 
     return 0;
 }

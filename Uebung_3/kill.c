@@ -1,17 +1,12 @@
+#define _POSIX_C_SOURCE 199309L
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/types.h>
-#define _POSIX_C_SOURCE 199309L
-/*
-To do
-- Handling cmd line option as signal number if given. (-> getops()?)
-*/
-
 
 int main(int argc, char const *argv[]) {
-    //int sigNum = 15; // Default signal if no options given.
-    int first = 1; // First PID (either 1 or if sigNum gíven -> 2)
+    int first = 1;
     int sigNum = 15;
     pid_t pid;
 
