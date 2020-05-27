@@ -52,6 +52,11 @@ Quelle:
 
 #### Aufgabe 1.4
 
+In der page table werden die Daten gespeichert, die zum Umrechnen von virtuellen zu physischen Adressen verwendet wird. Die MMU ist für das Umrechnen zuständig und bedient sich dafür der page table. Virtuelle Adressen sind Abstraktionen der logischen Adressen und für "normale" Prozesse sichtbar. 
+
+Quelle:
+https://de.wikipedia.org/wiki/Seitentabelle
+
 #### Aufgabe 1.5
 
 #### Aufgabe 1.6
