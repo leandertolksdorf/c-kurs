@@ -46,60 +46,146 @@ void fcfs(struct process *head) {
     }
 }
 
-struct process *shortestProcess(struct process *head) {
-    struct process *c = head -> next;
-    struct process *result
-    int resultDuration = 0;
-
-    while (c != head) {
-        if (c -> state == PS_READY) {
-            if (resultDuration == 0) {
-
-                result = c;
-                resultDuration = c -> cycles_todo;
-                printf("rD = 0 | %d\n", resultDuration);
-                return result;
-            } else {
-                printf("rd != 0\n");
-                if (c -> cycles_todo < resultDuration) {
-                    printf("Neuer kürzester Pr.\n");
-                    result = c;
-                    resultDuration = c -> cycles_todo;
-                }
+/*
+Die Hilfsfunktion shortest funktioniert sowohl für SPN als auch SRT.
+Bei SPN gilt für alle Ready-Prozesse: cycles_done = 0. Deshalb prüfen wir auch nur
+cycles_todo. Bei SRT interessiert auch nur cycles_todo. Deshalb können wir shortest bei
+SPN wiederverwenden.
+*/
+struct process *shortest(struct process *head) {
+    int duration;
+    int shortest = INFINITY;
+    struct process *result = NULL;
+    // Iteriere durch Prozesse p
+    for (struct process *p = head -> next; p != head; p = p -> next) {
+        // Wenn (p READY)
+        if (p -> state == PS_READY) {
+            // Berechne Dauer von p (= cycles_todo. Wir ignorieren cycles_done, weil es bei spn keine Fragmentierung gibt.)
+            duration = p -> cycles_todo;
+            // Wenn p kürzer als bisherige -> 
+            if (duration < shortest) {
+                shortest = duration;
+                result = p;
             }
         }
-        c = c -> next;
     }
-
     if (!result) {
-        printf("Irgendwas\n");
-        
-        printf("%d\n", result -> cycles_todo);
+        result = head;
     }
-
     return result;
 }
 
 /* Shortest Process Next */
-void spn(struct process *head) {
-    shortestProcess(head) -> state = PS_RUNNING;
 
-    for (struct process *c = head -> next; c != head; c = c -> next) {
-        printf("Shortest Process: %d | ", shortestProcess(head) -> pid);
-        if (c -> state == PS_RUNNING) {
-            if (c -> cycles_todo == 0) {
-                c -> state = PS_DEAD;
-                shortestProcess(head) -> state = PS_RUNNING;
+void spn(struct process *head) {
+    bool idle = true;
+    struct process *shortestProcess = NULL;
+
+    for (struct process *p = head -> next; p != head; p = p -> next) {
+        if (p -> state == PS_RUNNING) {
+            if (p -> cycles_todo == 0) {
+                p -> state = PS_DEAD;
+            } else {
+                idle = false;
             }
             break;
         }
     }
+
+    if (idle) {
+        shortestProcess = shortest(head);
+        if (shortestProcess != head) {
+            shortestProcess -> state = PS_RUNNING;
+        }
+    }
 }
+
 /* Shortest Remaining Time */
-void srt(struct process *head){
-    printf("srt");
+
+struct process *active(struct process *head) {
+    struct process *result = NULL;
+    for (struct process *p = head -> next; p != head; p = p -> next) {
+        if (p -> state == PS_RUNNING) {
+            result = p;
+            break;
+        }
+    }
+    return result;
+}
+
+void srt(struct process *head) {
+    struct process *shortestRem = shortest(head);
+    struct process *current = active(head);
+
+
+    if (!current) {
+        current = shortestRem;
+        current -> state = PS_RUNNING;
+        return;
+    }
+    if (shortestRem != head) {
+        if (current -> cycles_todo == 0) {
+            current -> state = PS_DEAD;
+            shortestRem -> state = PS_RUNNING;
+        } else if ((current -> cycles_todo) > (shortestRem -> cycles_todo)) {
+            current -> state = PS_READY;
+            shortestRem -> state = PS_RUNNING;
+        }
+    } else {
+        if (current -> cycles_todo == 0) {
+            current -> state = PS_DEAD;
+        }
+    }
 }
 /* Highest Response Ration Next */
+
+float responseRatio(struct process *p) {
+    float waited = (float) (p -> cycles_waited);
+    float serviceTime = (float) (p -> cycles_todo);
+
+    return (waited + serviceTime) / serviceTime;
+}
+
+struct process *highestRatio(struct process *head) {
+    int highest = 0;
+    int compare;
+    struct process *result = NULL;
+
+    for (struct process *p = head -> next; p != head; p = p -> next) {
+        if (p -> state == PS_READY) {
+            compare = responseRatio(p);
+            if (compare > highest) {
+                highest = compare;
+                result = p;
+            }
+        }
+    }
+    if (!result) {
+        result = head;
+    }
+    return result;
+}
+
 void hrrn(struct process *head){
-    printf("hrrn");
+    struct process *current = active(head);
+    struct process *next = NULL;
+
+    //printf("%d | ", current -> cycles_todo);
+
+    if (!current) {
+        current = highestRatio(head);
+        current -> state = PS_RUNNING;
+        return;
+    }
+
+    if (current -> cycles_todo == 0) {
+        next = highestRatio(head);
+        if (next != head) {
+            current -> state = PS_DEAD;
+            next -> state = PS_RUNNING;
+            return;
+        } else {
+            current -> state = PS_DEAD;
+        }
+    }
 }
