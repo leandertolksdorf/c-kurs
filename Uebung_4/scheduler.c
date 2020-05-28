@@ -93,14 +93,6 @@ void fcfs(struct process *head) {
         }
     }
 
-    // for (struct process *c = head -> next; c != head; c = c -> next) {
-    //     if (c -> cycles_todo == 0) {
-    //         c -> state = PS_DEAD;
-    //         if (c -> next != head) {
-    //             c -> next -> state = PS_RUNNING;
-    //         }
-    //     }
-    // }
 }
 
 /*
