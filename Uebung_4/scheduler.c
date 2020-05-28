@@ -77,17 +77,30 @@ void rr(struct process *head) {
 }
 /* First Come First Serve */
 void fcfs(struct process *head) {
-    // Set first process to RUNNING.
-    head -> next -> state = PS_RUNNING;
+    // Get current process (If none -> NULL)
+    struct process *current = active(head);
 
-    for (struct process *c = head -> next; c != head; c = c -> next) {
-        if (c -> cycles_todo == 0) {
-            c -> state = PS_DEAD;
-            if (c -> next != head) {
-                c -> next -> state = PS_RUNNING;
-            }
+    // If no running process -> set first ready to running and return
+    if (!current) {
+        nextReady(head, head) -> state = PS_RUNNING;
+        return;
+    }
+    // If running process done -> Kill process and run next.
+    if (current -> cycles_todo == 0) {
+        current -> state = PS_DEAD;
+        if (current -> next != head) {
+            current -> next -> state = PS_RUNNING;
         }
     }
+
+    // for (struct process *c = head -> next; c != head; c = c -> next) {
+    //     if (c -> cycles_todo == 0) {
+    //         c -> state = PS_DEAD;
+    //         if (c -> next != head) {
+    //             c -> next -> state = PS_RUNNING;
+    //         }
+    //     }
+    // }
 }
 
 /*
