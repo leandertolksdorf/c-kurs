@@ -9,8 +9,6 @@ Bearbeiter: Leander Tolksdorf, Simon Franke (Zusammenarbeit mit Sascha Brüning 
 Tutor: Leon Dirmeier
 */
 
-// SOME HELPER FUNCTIONS
-
 /*
 Returns the currently active process by checking all processes' states.
 */
