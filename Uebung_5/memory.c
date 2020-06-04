@@ -1,6 +1,6 @@
 /*
 TI3: 5. Übungsblatt / Aufgabe 2
-Bearbeiter: Leander Tolksdorf, Simon Franke
+Bearbeiter: Leander Tolksdorf, Simon Franke in Zusammenarbeit mit Florian Formanek, Sascha Brüning
 Tutor: Leon Dirmeier
 */
 
