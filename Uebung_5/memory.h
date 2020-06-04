@@ -7,12 +7,6 @@
 
 #define MEM_SIZE 1024
 
-struct node {
-    bool free;
-    size_t size;
-    struct node *next;
-    struct node *prev;
-};
 
 void memory_init(void);
 void *memory_allocate(size_t byte_count);
