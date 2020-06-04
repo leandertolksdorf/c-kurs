@@ -15,7 +15,6 @@ Returns the first free node with size >= minSize.
 */
 struct node *freeNode(size_t minSize) {
     for (struct node *n = head; n != dummy; n = n -> next) {
-        //printf("%d", n -> size);
         if ((n -> free) && (n -> size >= minSize)) {
             return n;
         }
@@ -23,28 +22,14 @@ struct node *freeNode(size_t minSize) {
     return NULL;
 }
 
-struct node *nextNode(struct node *current) {
-    if (current -> next != dummy) {
-        return current -> next;
-    } else {
-        return NULL;
-    }
-}
-
-size_t blockSize(struct node *a, struct node *b) {
-    // Calculate memory size (excluding header) between a and b (page 10)
-    size_t result = (long long) b - (long long) a - sizeof(*head);
-    return result;
-}
-
 size_t distance(struct node *a, struct node *b) {
-    size_t result = (long long) b - (long long) a;
+    size_t result = (long long) b - (long long) a  - sizeof(*head);
     return result;
 }
 
 void memory_init() {
     head -> free = true;
-    head -> size = blockSize(head, dummy);
+    head -> size = distance(head, dummy);
     head -> next = dummy;
     head -> prev = dummy;
     dummy -> next = head;
@@ -52,12 +37,6 @@ void memory_init() {
 
 void *memory_allocate(size_t byte_count) {
 
-    /*
-    Bugs: 
-    - Wenn man einiges alloziiert und dann nacheinander alles mit "f 0" freigibt, ist am Ende weniger Speicher übrig.
-        Scheint irgendwo ein Rechenfehler zu sein. (wahrscheinlich blockSize() oder so)
-    - 
-    */
 
     struct node *a = freeNode(byte_count);
 
@@ -98,39 +77,12 @@ void *memory_allocate(size_t byte_count) {
         // Set a size to byte_count
         a -> size = byte_count;
         // Set b size to fill space.
-        a -> next -> size = blockSize((a -> next), c);
+        a -> next -> size = distance((a -> next), c);
         return a;
     } else {
         return NULL;
     }
 }
-    /* 
-    First fit methode
-
-    Iteriere durch nodes
-        Wenn node -> free == True & node -> size >= (byte_count + sizeof(*head)):
-            Wenn node -> size == (byte_count + sizeof(*head)):
-                node -> free = false
-            Sonst:
-
-
-                finde passenden (freien) Node x
-                    Passe diesen an:
-                    x -> free = false
-                    x -> size = byte_count + sizeof(*head)
-                finde nächsten Node (nextNode()) (1)
-                
-                erstelle neuen node
-
-                struct node *new = (struct *node) (Speicheradresse vom neuen node)
-                new -> prev = Node x
-                new -> next = Node aus (1)
-                new -> size = blockSize(new, Node aus (1))
-                new -> free = true
-
-                Node aus (1) -> prev = new
-    */
-
 
 void memory_free(const void *const pointer) {
 
@@ -157,7 +109,7 @@ void memory_free(const void *const pointer) {
         // Link d -> a
         d -> prev = a;
         b -> prev -> free = true;
-        b -> prev -> size = distance(a, d) - sizeof(*head);
+        b -> prev -> size = distance(a, d);
     /*
     Case: |A-----|B-----|C     |D...
     After freeing: |A-----|B          |D...
@@ -168,7 +120,7 @@ void memory_free(const void *const pointer) {
         // Link b <- d
         d -> prev = b;
         b -> free = true;
-        b -> size = distance(b, d) - sizeof(*head);
+        b -> size = distance(b, d);
     /*
     Case: |A     |B-----|C-----|D...
     After freeing: |A          |C-----|D...
@@ -179,7 +131,7 @@ void memory_free(const void *const pointer) {
         // Link c -> a
         c -> prev = a;
         b -> prev -> free = true;
-        b -> prev -> size = distance(a, c) - sizeof(*head);
+        b -> prev -> size = distance(a, c);
     /*
     Case: |A-----|B-----|C-----|D...
     After freeing: |A-----|B     |C-----|D...
