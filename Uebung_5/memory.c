@@ -1,3 +1,9 @@
+/*
+TI3: 5. Übungsblatt / Aufgabe 2
+Bearbeiter: Leander Tolksdorf, Simon Franke
+Tutor: Leon Dirmeier
+*/
+
 #include <stdio.h>
 #include <stdbool.h>
 #include "memory.h"
