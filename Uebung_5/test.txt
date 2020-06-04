@@ -1,0 +1,19 @@
+a 100 // Ein Paar Allokationen.
+a 500
+a 150
+p
+a 100 // Dafür ist nun kein Platz mehr.
+p
+f 1 // Block 1 freimachen
+p
+a 150 // Passt in Block 1
+p
+a 318 // Passt genau in Block 2
+p
+f 1 // Block 1 wieder freimachen
+p
+f 0 // Block 0 freimachen -> Block 1 und Block 2 zusammenschließen
+p
+f 1 // Block 1 und Block 2 freimachen
+f 1 // Dann wieder -> leerer Speicher:
+p 

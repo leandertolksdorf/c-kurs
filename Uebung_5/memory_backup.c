@@ -61,16 +61,18 @@ void *memory_allocate(size_t byte_count) {
 
     struct node *a = freeNode(byte_count);
 
+
+    if (a -> size == byte_count) {
+        a -> free = false;
+        return;
+    } 
+
     // When no big enough free node available -> Stop
     if (!a) {
         printf("No free node found.\n");
         return NULL;
-    } 
-    
-    if (a -> size == byte_count) {
-        a -> free = false;
-        return a;
-    } else if (a -> size >= byte_count + sizeof(*head)) {
+    } else {
+        printf("Free node found.\n");
 
         /*
         Scenario (--- means not free):
@@ -100,8 +102,6 @@ void *memory_allocate(size_t byte_count) {
         // Set b size to fill space.
         a -> next -> size = blockSize((a -> next), c);
         return a;
-    } else {
-        return NULL;
     }
 }
     /* 
@@ -136,10 +136,10 @@ void memory_free(const void *const pointer) {
 
     // Define to-free pointer and pointers to surrounding nodes.
     // |A     |B     |C     |D...
-    struct node* b = (struct node*) pointer;
+    struct node* b = pointer;
     
     if (b -> free) {
-        printf("Block already free.\n"); 
+        printf("Already free.\n"); 
         return;
     }
 
@@ -152,6 +152,7 @@ void memory_free(const void *const pointer) {
     // Case: |A      |B------|C      |D...
     // After freeing: |A                 |D...
     if (b -> next -> free && b -> prev -> free) {
+        printf("Both free\n");
         // Link a -> d
         a -> next = d;
         // Link d -> a
@@ -163,6 +164,7 @@ void memory_free(const void *const pointer) {
     After freeing: |A-----|B          |D...
     */
     } else if (b -> next -> free) {
+        printf("Next free\n");
         // Link b -> d
         b -> next = d;
         // Link b <- d
@@ -174,6 +176,7 @@ void memory_free(const void *const pointer) {
     After freeing: |A          |C-----|D...
     */
     } else if (b -> prev -> free) {
+        printf("Previous free\n");
         // Link a -> c
         a -> next = c;
         // Link c -> a
@@ -185,25 +188,17 @@ void memory_free(const void *const pointer) {
     After freeing: |A-----|B     |C-----|D...
     */
     } else {
+        printf("None free\n");
         b -> free = true;
     }
 }
 
 void memory_print() {
+    // Vielleicht mit memory_by_index lösen? -> Quatsch, weil ineffizient.
     int block = 0;
     int totalSize = sizeof(*head);
-    printf("|--------------------------------|\n");
     for (struct node *n = head; n != dummy; n = n -> next) {
-        printf("| Block %d | Free: %d | Size: %d  |\n", block, n -> free, (int) n -> size);
-        for (int i = 0; i != (((int) n -> size / 100)); i++) {
-            if (n -> free) {
-                printf("|                                |\n");
-            } else {
-                printf("|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|\n");
-            }
-            
-        }
-        printf("|--------------------------------|\n");
+        printf("Block %d | Free: %d | Size: %d\n", block, n -> free, n -> size);
         block++;
         totalSize += sizeof(*head) + (n -> size);
     }
@@ -214,10 +209,9 @@ void *memory_by_index(size_t index) {
     // Gibt zum testen einfach head zurück.
     int i = 0;
     for (struct node *n = head; n != dummy; n = n -> next) {
-        if (i == (int) index) {
+        if (i == index) {
             return n;
         }
         i++;
     }
-    return NULL;
 }
