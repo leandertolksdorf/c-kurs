@@ -53,6 +53,10 @@ void memory_init() {
 }
 
 void *memory_allocate(size_t byte_count) {
+    /*
+    We're using the first-fit method to allocate memory.
+    -> Allocate first free block that's big enough.
+    */
 
     // Get a big enough free node (NULL if not enough space.)
     struct node *a = freeNode(byte_count);
