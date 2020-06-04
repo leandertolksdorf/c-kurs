@@ -20,7 +20,9 @@ Man sieht, dass lediglich mit der Rotating-First-Fit Methode die Anforderungen e
 
 ## Aufgabe 2
 
-Unsere test.txt enthält Kommentare, die beim Ausführen angezeigt werden:
+Unsere test.txt enthält Kommentare, die der Übersicht halber beim Ausführen angezeigt werden. 
+
+Falls das aus irgendeinem Grund bei der Korrektur nicht mehr funktioniert, gibt es die text_no_comments.txt ohne Kommentare als Alternative.
 ```
 a 100 // Ein Paar Allokationen.
 a 500
