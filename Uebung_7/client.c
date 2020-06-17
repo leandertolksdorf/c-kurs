@@ -7,14 +7,17 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+#define BUFSIZE 16
 
 int main(int argc, char *argv[]) {
-    int socketFd, connFd;
+    int socketFd, connFd, readBytes;
     struct sockaddr *addr;
     struct sockaddr_un server;
     struct sockaddr_un client;
     char *path = argv[1];
-    char *input;
 
     int socketfd, socklen;
     
@@ -43,10 +46,26 @@ int main(int argc, char *argv[]) {
         printf("Connected to server using fd %d\n", connFd);
     }
 
+    char* buf = malloc(BUFSIZE);
     // Schreibe nach connFd.
     while(1) {
-        printf("Waiting for input\n");
-        scanf("%s", &input);
-        printf("%s", input);
+        do {
+            readBytes = read(0, buf, BUFSIZE);
+            if ((send(socketFd, buf, readBytes, NULL)) < 0) {
+                perror("Error");
+            } else {
+                printf("Sent %d bytes.\n",readBytes);
+            }
+        } while (readBytes > 0);
     }
+}
+
+int sendMsg(int socket, void *buffer, size_t length) {
+    char* ptr = (char*) buffer;
+    while(length > 0) {
+        int sendBytes = send(socket, ptr, length, NULL);
+        ptr += sendBytes;
+        length -= sendBytes;
+    }
+    return 1;
 }

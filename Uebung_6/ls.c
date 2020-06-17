@@ -44,8 +44,6 @@ int main(int argc, char *argv[]) {
     int (*sort)(const struct dirent **, const struct dirent **) = NULL;
     bool lFlag = false;
 
-
-
     // Parse options
     while((option = getopt(argc, argv, "al")) != -1) {
         switch(option) {

@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <sys/un.h>
 #include <string.h>
+#define BUFSIZE 16
 // Create socket and store fd
 
 #define SERVER_PATH "/tmp/server"
 
 int main(int argc, char const *argv[])
 {
-    int socketFd, c;
+    int socketFd, c, recvBytes;
     char* path = argv[1];
 
 
@@ -41,9 +42,22 @@ int main(int argc, char const *argv[])
 
     listen(socketFd, 1);
     int connFd = accept(socketFd, clientPtr, &socksize);
-    printf("%d", connFd);
+    printf("Connected\n");
 
     // Lies connFd und wenn input -> Print to Stdout
 
-    
+    char buf[BUFSIZE];
+    while(1) {
+        
+        do {
+            memset(buf, 0, BUFSIZE);
+            if ((recvBytes = recv(connFd, buf, BUFSIZE, 0)) < 0) {
+                printf("Error");
+                break;
+            } else {
+                printf("Received: %s\n", buf);
+            }
+        } while (recvBytes > 0);
+    }
+
 }
