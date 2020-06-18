@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 int sendMsg(int socket, void *buffer, size_t length) {
     char* ptr = (char*) buffer;
     while(length > 0) {
-        int sendBytes = send(socket, ptr, length, NULL);
+        int sendBytes = send(socket, ptr, length, MSG_CONFIRM);
         ptr += sendBytes;
         length -= sendBytes;
     }
