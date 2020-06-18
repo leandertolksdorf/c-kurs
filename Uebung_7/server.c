@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <sys/un.h>
 #include <string.h>
-#define BUFSIZE 16
+#define BUFSIZE 64
 // Create socket and store fd
 
 #define SERVER_PATH "/tmp/server"
@@ -14,6 +14,7 @@
 
 int main(int argc, char const *argv[])
 {
+    // Vars for socket, path and const msgs.
     int socketFd, connFd, c, recvBytes;
     char* path = argv[1];
     char* quitCommand = "QUIT\n";
@@ -27,16 +28,19 @@ int main(int argc, char const *argv[])
         ERROR_ROUTINE("SocketInit")
     }
 
+    // Pointers to sockaddr structs.
     socklen_t socksize;
     struct sockaddr* sockPtr;
     struct sockaddr* clientPtr;
-
     struct sockaddr_un server;
+
+    // Settings for server socket.
     memset(&server, 0, sizeof(server));
     server.sun_family = AF_UNIX;
     strncpy(server.sun_path, path, sizeof(server.sun_path) - 1);
     sockPtr = (struct sockaddr*)&server;
     
+    // Bind
     if (bind(socketFd, sockPtr, sizeof(struct sockaddr)) == 0) {
         printf("Bound socket.\n");
     } else {
@@ -50,8 +54,6 @@ int main(int argc, char const *argv[])
         ERROR_ROUTINE("Connection failed");
     }
 
-    // Lies connFd und wenn input -> Print to Stdout
-
     char buf[BUFSIZE];
     while(1) {
         
@@ -60,7 +62,7 @@ int main(int argc, char const *argv[])
             if ((recvBytes = recv(connFd, buf, BUFSIZE, 0)) < 0) {
                 ERROR_ROUTINE("recv");
             } else {
-                //send(connFd, msgConfirm, sizeof(msgConfirm), MSG_CONFIRM);
+                send(connFd, msgConfirm, sizeof(msgConfirm), 0);
                 
                 if(strcmp(buf, quitCommand) == 0) {
                     memset(buf, 0, BUFSIZE);
@@ -70,7 +72,7 @@ int main(int argc, char const *argv[])
                     connFd = accept(socketFd, clientPtr, &socksize);
                     break;
                 }
-                printf("Received: %s\n", buf);
+                printf("%s", buf);
             }
         } while (recvBytes > 0);
     }

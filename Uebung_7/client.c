@@ -10,17 +10,17 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#define BUFSIZE 16
+#define BUFSIZE 64
 
 int main(int argc, char *argv[]) {
+    // Vars for socket, connection, confirmation message etc.
+    (void) argc;
     int socketFd, connFd, readBytes;
-    struct sockaddr *addr;
-    struct sockaddr_un server;
     struct sockaddr_un client;
-    char *path = argv[1];
-
-    int socketfd, socklen;
+    char* path = argv[1];
+    char msgConfirm[4];
     
+    // Try to init. socket.
     if ((socketFd = socket(AF_UNIX, SOCK_STREAM, 0)) > 0) {
         printf("Client socket initialized.\n");
     } else {
@@ -28,17 +28,13 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    socklen_t socksize;
-    struct sockaddr* sockPtr;
-    struct sockaddr* clientPtr;
-
+    // Settings for client sockaddr struct.
     memset(&client, 0, sizeof(client));
-
     client.sun_family = AF_UNIX;
     strncpy(client.sun_path, path, sizeof(client.sun_path) - 1);
-    sockPtr = (struct sockaddr*)&server;
 
-    if (connFd = connect(socketFd, (struct sockaddr *) &client, sizeof(struct sockaddr)) < 0) { 
+    // Try to connect to socket.
+    if ((connFd = connect(socketFd, (struct sockaddr *) &client, sizeof(struct sockaddr))) < 0) { 
         printf("Connection failed.\n"); 
         exit(EXIT_FAILURE); 
     } 
@@ -46,26 +42,21 @@ int main(int argc, char *argv[]) {
         printf("Connected to server using fd %d\n", connFd);
     }
 
+    // Buffer for received messages.
     char* buf = malloc(BUFSIZE);
-    // Schreibe nach connFd.
+    // Client connection loop
     while(1) {
         do {
+            // Read from stdin
             readBytes = read(0, buf, BUFSIZE);
-            if ((send(socketFd, buf, readBytes, NULL)) < 0) {
+            // Send message to socket and wait for confirmation msg from server.
+            if ((send(socketFd, buf, readBytes, 0)) < 0) {
                 perror("Error");
             } else {
-                printf("Sent %d bytes.\n",readBytes);
+                recv(socketFd, msgConfirm, BUFSIZE, 0);
+                printf("%s", msgConfirm);
+                memset(msgConfirm, 0, sizeof(msgConfirm));
             }
         } while (readBytes > 0);
     }
-}
-
-int sendMsg(int socket, void *buffer, size_t length) {
-    char* ptr = (char*) buffer;
-    while(length > 0) {
-        int sendBytes = send(socket, ptr, length, MSG_CONFIRM);
-        ptr += sendBytes;
-        length -= sendBytes;
-    }
-    return 1;
 }
