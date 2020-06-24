@@ -9,22 +9,23 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define BACKLOG 1
 #define BUFSIZE 64
 
 int main(int argc, char* argv[]) {
-    int port;
+    in_addr_t addr;
+    int socketFd, connFd, recvBytes, port;
+    struct sockaddr_in socketAddr, clientAddr;
 
-    if(argc < 2) {
-        printf("Please enter port.\n");
+    if(argc < 3) {
+        printf("Please enter ./tcp-server <ip> <port>\n");
         exit(EXIT_FAILURE);
     } else {
-        port = atoi(argv[1]);
+        inet_aton(argv[1], &addr);
+        port = atoi(argv[2]);
     }
-    
-    int socketFd, connFd, recvBytes;
-    struct sockaddr_in socketAddr, clientAddr;
 
     // Create socket
     if((socketFd = socket(AF_INET, SOCK_STREAM, 0)) != -1) {
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
     }
 
     socketAddr.sin_family = AF_INET;
-    socketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    socketAddr.sin_addr.s_addr = addr;
     socketAddr.sin_port = htons(port);
 
     if((bind(socketFd, (struct sockaddr*)&socketAddr, sizeof(socketAddr))) != -1) {
@@ -44,7 +45,6 @@ int main(int argc, char* argv[]) {
         printf("Socket binding failed.\n");
         exit(EXIT_FAILURE);
     }
-
 
     if(listen(socketFd, BACKLOG) == -1) {
         printf("Error listening.\n");
