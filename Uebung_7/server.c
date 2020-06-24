@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
     char buf[BUFSIZE];
     // Server loop
     while(1) {
-        
         do {
             // Null buffer everytime to remove already-printed characters.
             memset(buf, 0, BUFSIZE);
