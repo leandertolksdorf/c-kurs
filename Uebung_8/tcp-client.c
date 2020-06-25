@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     struct sockaddr_in client;
 
     if(argc < 3) {
-        printf("Please enter ./tcp-server <ip> <port>\n");
+        printf("Please enter ./tcp-client <ip> <port>\n");
         exit(EXIT_FAILURE);
     } else {
         inet_aton(argv[1], &addr);
