@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/un.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -14,8 +14,10 @@
 
 #define BUFSIZE 64
 
+int inet_aton(const char *cp, struct in_addr *addr);
+
 int main(int argc, char* argv[]) {
-    in_addr_t addr;
+    struct in_addr addr;
     int socketFd, connFd, readBytes, port;
     struct sockaddr_in client;
 
@@ -36,7 +38,7 @@ int main(int argc, char* argv[]) {
     }
 
     client.sin_family = AF_INET;
-    client.sin_addr.s_addr = addr;
+    client.sin_addr.s_addr = addr.s_addr;
     client.sin_port = htons(port);
 
     if((connFd = connect(socketFd, (struct sockaddr *) &client, sizeof(struct sockaddr))) < 0) {
@@ -51,12 +53,15 @@ int main(int argc, char* argv[]) {
 
     while(1) {
         do {
-            //memset(buf, 0, BUFSIZE);
             readBytes = read(0, sendBuf, BUFSIZE);
 
             if((send(socketFd, sendBuf, readBytes, 0)) < 0) {
                 printf("Error sending message.");
             } else {
+                if(strcmp(sendBuf, "QUIT\n") == 0) {
+                    close(socketFd);
+                    exit(0);
+                }
                 recv(socketFd, recvBuf, BUFSIZE, 0);
                 printf("%s", recvBuf);
                 memset(recvBuf, 0, sizeof(recvBuf));
