@@ -19,7 +19,7 @@ int inet_aton(const char *cp, struct in_addr *addr);
 int main(int argc, char* argv[]) {
     pid_t childPid;
     struct in_addr addr;
-    int socketFd, connFd, recvBytes, port;
+    int socketFd, connFd, requestFd, recvBytes, port, readBytes;
     struct sockaddr_in socketAddr;
 
     if(argc < 3) {
@@ -64,26 +64,37 @@ int main(int argc, char* argv[]) {
             printf("Connection accepted.\n");
         }
         char buf[BUFSIZE];
+        char *fileBuf[BUFSIZE];
         if ((childPid = fork()) == 0) {
             while(1) {
-                do {
-                    if ((recvBytes = recv(connFd, buf, BUFSIZE, 0)) < 0) {
-                        printf("Error receiving.\n");
-                        exit(EXIT_FAILURE);
+                memset(buf, 0, BUFSIZE);
+                memset(recvBytes, 0, sizeof(recvBytes));
+                recvBytes = recv(connFd, buf, BUFSIZE, 0);
+                if (recvBytes < 0) {
+                    printf("Error receiving.\n");
+                    exit(EXIT_FAILURE);
+                } 
+                if (recvBytes > 0) {
+                    if(strcmp(buf, "QUIT\n") == 0) {
+                        printf("Closed connection.\n");
+                        exit(0);
                     } else {
-                        if(strcmp(buf, "QUIT\n") == 0) {
-                            memset(buf, 0, BUFSIZE);
-                            close(connFd);
-                            printf("Closed connection.\n");
-                            return 0;
+                        if ((requestFd = open(buf, O_RDONLY)) == -1) {
+                            printf("C\n");
+                            send(connFd, "File not found.\n", 17, 0);
+                            printf("%s\n", buf);
                         } else {
-                            printf("%s", buf);
-                            send(connFd, "OK\n", 4, 0);
-                            memset(buf, 0, BUFSIZE);
+                            while ((readBytes = read(requestFd, fileBuf, BUFSIZE)) > 0) {
+                                send(connFd, fileBuf, readBytes, 0);
+                            };
                         }
                     }
-                } while (recvBytes > 0);
+                }
             }
         }
     }
+}
+
+void exitRoutine(int socketFd, int connFd) {
+
 }
