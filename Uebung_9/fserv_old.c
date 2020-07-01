@@ -56,51 +56,40 @@ int main(int argc, char* argv[]) {
         printf("Listening on Port %d\n", port);
     }
 
-    while(1) {
+    while(1) {    
         if((connFd = accept(socketFd, NULL, NULL)) == -1) {
             perror("Error accepting connection.\n");
             exit(EXIT_FAILURE);
         } else {
             printf("Connection accepted.\n");
         }
-        if((childPid = fork()) == 0) {
-            connInstance(connFd, socketFd);
-        }   
-    }
-}
-
-void connInstance(int connFd, int socketFd) {
-    int recvBytes, readBytes, requestFd;
-    char msgBuf[BUFSIZE];
-    char fileBuf[BUFSIZE];
-    while(1) {
-        memset(msgBuf, 0, BUFSIZE);
-        recvBytes = recv(connFd, msgBuf, BUFSIZE, 0);
-
-        if (recvBytes == -1) {
-            printf("Error receiving msg.\n");
-        } else if (recvBytes > 0) {
-
-            if(strcmp(msgBuf, "QUIT\n") == 0) {
-                printf("Closed connection.\n");
-                close(connFd);
-                return;
-            }
-
-            requestFd = open(msgBuf, O_RDONLY);
-
-            if (requestFd == -1) {
-
-                printf("File not found.\n");
-
-            } else {
-
-                while((readBytes = read(requestFd, fileBuf, BUFSIZE)) > 0) {
-                    send(connFd, fileBuf, readBytes, 0);
-                    memset(fileBuf, 0, BUFSIZE);
+        if ((childPid = fork()) == 0) {
+            char buf[BUFSIZE];
+            char *fileBuf[BUFSIZE];
+            while(1) {
+                memset(buf, 0, BUFSIZE);
+                recvBytes = recv(connFd, buf, BUFSIZE, 0);
+                if (recvBytes < 0) {
+                    printf("Error receiving.\n");
+                    exit(EXIT_FAILURE);
+                } 
+                if (recvBytes >= 0) {
+                    if(strcmp(buf, "QUIT\n") == 0) {
+                        printf("Closed connection.\n");
+                        exit(0);
+                    } else {
+                        if ((requestFd = open(buf, O_RDONLY)) == -1) {
+                            printf("C\n");
+                            send(connFd, "File not found.\n", 17, 0);
+                            printf("%s\n", buf);
+                        } else {
+                            while ((readBytes = read(requestFd, fileBuf, BUFSIZE)) > 0) {
+                                send(connFd, fileBuf, readBytes, 0);
+                            }
+                            send(connFd, "\n", 2, 0);
+                        }
+                    }
                 }
-
-                send(connFd, "\n", 2, 0);
             }
         }
     }
