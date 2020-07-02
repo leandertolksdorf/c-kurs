@@ -1,3 +1,9 @@
+/*
+TI3: 9. Übungsblatt, 2. Aufgabe
+Bearbeiter: Leander Tolksdorf, Simon Franke, Firas Drass
+Tutor: Leon Dirmeier
+*/
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -6,7 +12,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdbool.h>
-#include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <strings.h>
@@ -16,21 +21,64 @@
 
 int inet_aton(const char *cp, struct in_addr *addr);
 
+void connInstance(int connFd) {
+    int recvBytes, readBytes, requestFd;
+    
+    char msgBuf[BUFSIZE]; // Buffer for receiving file name.
+    char fileBuf[BUFSIZE]; // Buffer for file contents.
+
+    memset(msgBuf, 0, BUFSIZE);
+    recvBytes = recv(connFd, msgBuf, BUFSIZE, 0);
+
+    if (recvBytes == -1) {
+        printf("Error receiving msg.\n");
+    } else if (recvBytes > 0) {
+
+        if(strcmp(msgBuf, "QUIT\n") == 0) {
+            printf("Closed connection.\n");
+            close(connFd);
+            return;
+        }
+        
+        // Open file.
+        requestFd = open(msgBuf, O_RDONLY);
+
+        // Check if existing.
+        if (requestFd == -1) {
+            printf("File not found.\n");
+        } else {
+
+            printf("File sent.\n");
+            // Send file contents.
+            while((readBytes = read(requestFd, fileBuf, BUFSIZE)) > 0) {
+                send(connFd, fileBuf, readBytes, 0);
+                memset(fileBuf, 0, BUFSIZE);
+            }
+            send(connFd, "\n", 2, 0);
+        }
+        // Close connection.
+        close(connFd);
+        printf("Closed connection.\n");
+        return;
+    }
+}
 int main(int argc, char* argv[]) {
     pid_t childPid;
     struct in_addr addr;
-    int socketFd, connFd, requestFd, recvBytes, port, readBytes;
+    int socketFd, connFd, port;
     struct sockaddr_in socketAddr;
 
     if(argc < 3) {
-        printf("Please enter ./tcp-server <ip> <port>\n");
+        printf("Please enter ./fserv <ip> <port>\n");
         exit(EXIT_FAILURE);
     } else {
+
+        // Adresse und Port konvertieren.
         inet_aton(argv[1], &addr);
         port = atoi(argv[2]);
     }
 
-    // Create socket
+    // Socket erstellen
     if((socketFd = socket(AF_INET, SOCK_STREAM, 0)) != -1) {
         printf("Server socket created.\n");
     } else {
@@ -64,44 +112,8 @@ int main(int argc, char* argv[]) {
             printf("Connection accepted.\n");
         }
         if((childPid = fork()) == 0) {
-            connInstance(connFd, socketFd);
+            // Make connection instance.
+            connInstance(connFd);
         }   
-    }
-}
-
-void connInstance(int connFd, int socketFd) {
-    int recvBytes, readBytes, requestFd;
-    char msgBuf[BUFSIZE];
-    char fileBuf[BUFSIZE];
-    while(1) {
-        memset(msgBuf, 0, BUFSIZE);
-        recvBytes = recv(connFd, msgBuf, BUFSIZE, 0);
-
-        if (recvBytes == -1) {
-            printf("Error receiving msg.\n");
-        } else if (recvBytes > 0) {
-
-            if(strcmp(msgBuf, "QUIT\n") == 0) {
-                printf("Closed connection.\n");
-                close(connFd);
-                return;
-            }
-
-            requestFd = open(msgBuf, O_RDONLY);
-
-            if (requestFd == -1) {
-
-                printf("File not found.\n");
-
-            } else {
-
-                while((readBytes = read(requestFd, fileBuf, BUFSIZE)) > 0) {
-                    send(connFd, fileBuf, readBytes, 0);
-                    memset(fileBuf, 0, BUFSIZE);
-                }
-
-                send(connFd, "\n", 2, 0);
-            }
-        }
     }
 }

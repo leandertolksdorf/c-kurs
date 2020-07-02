@@ -1,4 +1,4 @@
-NASM=nasm
+00NASM=nasm
 NASMFLAGS=-f elf64
 CFLAGS=-std=c11 -Wall -Wextra -pedantic -O2
 CPPFLAGS=-MMD -MF $*.d
@@ -13,7 +13,7 @@ all: $(programs)
 	$(CC) -o $@ $(LDFLAGS) $^ $(LDLIBS)
 
 %.o: %.asm
-	$(NASM) -o $@ $(NASMFLAGS) $<
+	 $(NASM) -o $@ $(NASMFLAGS) $<
 %.o: %.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
