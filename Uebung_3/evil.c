@@ -1,25 +1,34 @@
+/*
+TI3: 3. Übungsblatt - Aufgabe 2
+Bearbeiter: Simon Franke, Leander Tolksdorf
+Tutor: Leon Dirmeier
+*/
+
+#define _POSIX_C_SOURCE 199309L
+
 #include <stdio.h> 
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
 
-#define _POSIX_C_SOURCE 199309L
-
 // Define handlers for SIGINT and SIGTERM
 
 void sigIntHandler(int sigNum) {
-    printf("sigIntHandler: Böse Nachricht\n");
+    (void) sigNum;
+    char* msg = "sigIntHandler: Böse Nachricht\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
 }
 
 void sigTermHandler(int sigNum) {
-    printf("sigTermHandler: Böse Nachricht\n");
+    (void) sigNum;
+    char* msg = "sigTermHandler: Bösere Nachricht\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
-    int pid = getpid();
-
     // Define structs for SIGINT- and SIGTERM-handling.
     struct sigaction sigInt;
     struct sigaction sigTerm;
@@ -31,6 +40,7 @@ int main(int argc, char const *argv[])
 
     // Set sleep time to 2 seconds.
     sleep.tv_sec = 2;
+    sleep.tv_nsec = 0;
 
     // Declare procedure on SIGINT and SIGTERM-signals.
     sigaction(SIGINT, &sigInt, NULL);
@@ -38,8 +48,8 @@ int main(int argc, char const *argv[])
 
     // Print PID continually.
     while(1){
-        printf("Endlosschleife | PID: %d\n", pid);
-        nanosleep(&sleep, NULL);
+        printf("PID: %d | Endlosschleife\n", getpid());
+        nanosleep(&sleep, (struct timespec *)NULL);
     }
 
     return 0;
