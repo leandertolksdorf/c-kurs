@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
     if((bind(socketFd, (struct sockaddr*)&socketAddr, sizeof(socketAddr))) != -1) {
         printf("Bound socket.\n");
     } else {
-        printf("Socket binding failed.\n");
+        printf("Sockeif ()t binding failed.\n");
         exit(EXIT_FAILURE);
     }
 
