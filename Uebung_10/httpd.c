@@ -14,79 +14,98 @@ Tutor: Leon Dirmeier
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <fcntl.h>
-#include "requestHandler.h"
 
 #define BACKLOG 1
 #define BUFSIZE 64
 #define REQUESTSIZE 2048
 
-int inet_aton(const char *cp, struct in_addr *addr);
+/*
+FUNCTIONS FOR HANDLING HTTP REQUESTS
+*/
+
+char* getRequestPath(char* buf) {
+    // Takes a raw HTTP-request.
+
+    // Address of first "/". +1 to exclude the "/"
+    char* start = strchr(buf, 47) + 1;
+    char* end = strchr(start, 32); // Address of first " "
+    // Length of request path.
+    size_t len = end - start;
+    // Allocate space for path string.
+    char* requestPath = (char*) malloc(sizeof(char)*(len + 1));
+    // Copy requestpath.buf
+    strncpy(requestPath, start, len);
+    return requestPath;
+}
+
+void sendError(int connFd) {
+    char error[] = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length: 20\r\nConnection: close\r\n\r\n404: File not found.";
+    send(connFd, error, sizeof(error), 0);
+}
+
+void sendFile(int connFd, int fileFd, char* path) {
+    int readBytes;
+    char header[128];
+
+    // Get Content-Type
+
+    char* mime;
+    char* ext = strchr(path, 46); // Get file extension. (Search ".")
+    if(strcmp(ext, ".html") == 0 || strcmp(ext, ".htm")) {
+        mime = "text/html; charset=utf-8";
+    } else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0) {
+        mime = "image/jpg";
+    } else if (strcmp(ext, ".png") == 0) {
+        mime = "image/png";
+    } else if (strcmp(ext, ".ico") == 0) {
+        mime = "image/ico";
+    } else {
+        mime = NULL;
+    }
+    
+    // Get Content-Length from file stats.
+    struct stat fileStats;
+    fstat(fileFd, &fileStats);
+
+    sprintf(header,
+            "HTTP/1.0 200 OK\r\n"
+            "Content-Type: %s\r\n"
+            "Connection: close\r\n"
+            "Content-Length: %ld\r\n\r\n",
+            mime, fileStats.st_size);
+    // Send header.
+    send(connFd, header, strlen(header), 0);
+    //send(connFd, "Hallo\r\n", 8, 0);
+
+    // Send file.
+    char fileBuf[64];
+    while((readBytes = read(fileFd, fileBuf, 64)) > 0) {
+        send(connFd, fileBuf, readBytes, 0);
+        memset(fileBuf, 0, 64);
+    }
+    close(fileFd);
+    send(connFd, "\r\n", 3, 0);
+}
+
+void handleRequest(int connFd, char* path) {
+    int fd;
+
+    if((fd = open(path, 0, O_RDONLY)) < 0) {
+            perror("Error 404: File not found.\n");
+            fd = open("404.html", 0, O_RDONLY);
+            sendFile(connFd, fd, "404.html");
+    } else {
+        printf("Found file.\n");
+        sendFile(connFd, fd, path);
+    }
+    close(connFd);
+}
 
 /*
-Methoden:
-
-main() {
-    - Addresse und Port aus CL parsen.
-    socketFd = socketInit(address, port)
-    connFd = listenForConnection(socketFd)
-    while(1) {
-        if (childPid = fork() == 0) {
-            connInstance(connFd);
-        }
-    }
-}
-
-socketInit(adress, port) {
-    - Server socket erstellen.
-    - Server socket binden.
-    return socketFd
-}
-
-listenForConnection(socketFd) {
-    - Listen auf socketFd.
-    - Wenn Verbindung angefordert: Accepten
-    return connFd
-}
-
-connInstance(connFd) {
-    - Dateinamen aus Anfrage parsen.
-    - Datei vorhanden?
-        - DateiFD getten.
-        - sendFile(DateiFD)
-    - Datei nicht vorhanden?
-        - sendError(404)
-}
-
-handleRequest(requestBuf) {
-    - erstes "/" finden
-    
-}
-
-sendSuccess(int fd) {
-    - Metadaten holen
-        - Content-Type (stat???)
-        - Content-Length (stat.)
-        - Status = 200
-        - Connection: Close
-    - Metadaten senden
-    - Eigentliche Datei (CONTENT) senden -> sendFile(fd);
-    - Connection closen
-}
-
-sendFile(int fd) {
-    - Buffer initialisieren
-    while readBytes > 0:
-        - read()
-        - send()
-        - buffer nullen
-}
-
-sendError(int error) {
-    - Error-Header generieren
-    - und senden.
-    - Connection closen.
-}
+FUNCTIONS FOR INITIALIZING SERVER AND CREATING CONNECTION INSTANCES
 */
+
+int inet_aton(const char *cp, struct in_addr *addr);
 
 int initSocket(struct in_addr address, int port) {
     struct sockaddr_in socketAddr;
@@ -117,7 +136,6 @@ int initSocket(struct in_addr address, int port) {
 void connInstance(int connFd) {
     int recvBytes;
     char requestBuf[REQUESTSIZE];
-    //char helloWorld[] = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: close\r\n\r\nHello, world!\n";
 
     if((recvBytes = recv(connFd, requestBuf, REQUESTSIZE, 0)) < 0) {
         perror("Error receiving request.\n");
@@ -126,7 +144,9 @@ void connInstance(int connFd) {
         printf("---RECEIVED REQUEST---\n%s\n---END OF REQUEST---\n", requestBuf);
 
         char* requestPath = getRequestPath(requestBuf);
-        memset(requestBuf, 0, REQUESTSIZE);
+        if(strcmp(requestPath, "") == 0) {
+            requestPath = "index.html";
+        }
         printf("Requested path: %s\n", requestPath);
 
         // Try to open file.
@@ -138,7 +158,7 @@ void connInstance(int connFd) {
     return;
 }
 
-int listenForConnections(int socketFd) {
+int serverRoutine(int socketFd) {
 
     int connFd;
     
@@ -165,7 +185,6 @@ int listenForConnections(int socketFd) {
     }
 }
 
-
 int main(int argc, char* argv[]) {
 
     // Check arguments
@@ -181,5 +200,5 @@ int main(int argc, char* argv[]) {
 
     int socketFd = initSocket(addr, port);
     
-    listenForConnections(socketFd);
+    serverRoutine(socketFd);
 }
