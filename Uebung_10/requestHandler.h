@@ -1,3 +1,11 @@
+struct response {
+    char* status;
+    char* contentType;
+    char* connection;
+    char* contentLength;
+    char* content;
+};
+
 char* getRequestPath(char* buf) {
     // Takes a raw HTTP-request.
 
@@ -19,45 +27,30 @@ void sendError(int connFd) {
 }
 
 void sendFile(int connFd, int fileFd, char* path) {
-    int readBytes;
-    char header[128];
+    struct response resp;
+    
+    resp.status = "Status: 200 OK\r\n";
+
+    resp.connection = "Connection: close\r\n";
 
     // Get Content-Type
 
     char* mime;
     char* ext = strchr(path, 46); // Get file extension. (Search ".")
-    if(strcmp(ext, ".html") == 0 || strcmp(ext, ".htm")) {
-        mime = "text/html";
-    } else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0) {
-        mime = "image/jpg";
+    if(strcmp(ext, ".html") == 0) {
+        mime = "Content-Type: text/html\r\n";
     } else if (strcmp(ext, ".png") == 0) {
-        mime = "image/png";
-    } else {
-        mime = NULL;
+        mime = "Content-Type: image/png\r\n";
     }
+    resp.contentType = mime;
     
-    // Get Content-Length from file stats.
+    // Get Content-Length
     struct stat fileStats;
     fstat(fileFd, &fileStats);
+    sprintf(resp.contentLength, "%d", (int)fileStats.st_size);
 
-    sprintf(header,
-            "HTTP/1.0 200 OK\r\n"
-            "Content-Type: %s\r\n"
-            "Connection: close\r\n"
-            "Content-Length: %ld\r\n\r\n",
-            mime, fileStats.st_size);
-    // Send header.
-    send(connFd, header, strlen(header), 0);
-    //send(connFd, "Hallo\r\n", 8, 0);
-
-    // Send file.
-    char fileBuf[64];
-    while((readBytes = read(fileFd, fileBuf, 64)) > 0) {
-        send(connFd, fileBuf, readBytes, 0);
-        memset(fileBuf, 0, 64);
-    }
-    close(fileFd);
-    send(connFd, "\r\n", 3, 0);
+    // Get file content
+    resp.content = "\r\nHallo";
 }
 
 void handleRequest(int connFd, char* path) {
@@ -66,9 +59,8 @@ void handleRequest(int connFd, char* path) {
     if((fd = open(path, 0, O_RDONLY)) < 0) {
             perror("Error 404: File not found.\n");
             sendError(connFd);
-    } else {
-        printf("Found file.\n");
-        sendFile(connFd, fd, path);
-    }
-    close(connFd);
+        } else {
+            printf("Found file.\n");
+            sendFile(connFd, fd, path);
+        }
 }
