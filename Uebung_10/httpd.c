@@ -38,12 +38,7 @@ char* getRequestPath(char* buf) {
     return requestPath;
 }
 
-void sendError(int connFd) {
-    char error[] = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length: 20\r\nConnection: close\r\n\r\n404: File not found.";
-    send(connFd, error, sizeof(error), 0);
-}
-
-void sendFile(int connFd, int fileFd, char* path) {
+void sendFile(int connFd, int fileFd, char* status, char* path) {
     int readBytes;
     char header[128];
 
@@ -68,11 +63,11 @@ void sendFile(int connFd, int fileFd, char* path) {
     fstat(fileFd, &fileStats);
 
     sprintf(header,
-            "HTTP/1.0 200 OK\r\n"
+            "HTTP/1.0 %s\r\n"
             "Content-Type: %s\r\n"
             "Connection: close\r\n"
             "Content-Length: %ld\r\n\r\n",
-            mime, fileStats.st_size);
+            status, mime, fileStats.st_size);
     // Send header.
     send(connFd, header, strlen(header), 0);
     //send(connFd, "Hallo\r\n", 8, 0);
@@ -91,12 +86,12 @@ void handleRequest(int connFd, char* path) {
     int fd;
 
     if((fd = open(path, 0, O_RDONLY)) < 0) {
-            perror("Error 404: File not found.\n");
+            printf("> 404 Not Found\n");
             fd = open("404.html", 0, O_RDONLY);
-            sendFile(connFd, fd, "404.html");
+            sendFile(connFd, fd, "404 Not Found", "404.html");
     } else {
-        printf("Found file.\n");
-        sendFile(connFd, fd, path);
+        printf("> 200 OK\n");
+        sendFile(connFd, fd, "200 OK", path);
     }
     close(connFd);
 }
@@ -141,20 +136,19 @@ void connInstance(int connFd) {
         perror("Error receiving request.\n");
         exit(EXIT_FAILURE);
     } else if (recvBytes > 0) {
-        printf("---RECEIVED REQUEST---\n%s\n---END OF REQUEST---\n", requestBuf);
 
         char* requestPath = getRequestPath(requestBuf);
         if(strcmp(requestPath, "") == 0) {
             requestPath = "index.html";
         }
-        printf("Requested path: %s\n", requestPath);
+        printf("Request: %s\n", requestPath);
 
         // Try to open file.
         handleRequest(connFd, requestPath);
     }
 
     close(connFd);
-    printf("Connection closed.\n");
+    printf("> Connection closed.\n");
     return;
 }
 
@@ -177,7 +171,7 @@ int serverRoutine(int socketFd) {
             exit(EXIT_FAILURE);
         }
 
-        printf("Connection accepted.\n");
+        printf("\nConnection accepted.\n");
 
         if(fork() == 0) {
             connInstance(connFd);
