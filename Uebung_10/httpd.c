@@ -14,6 +14,7 @@ Tutor: Leon Dirmeier
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <fcntl.h>
+#include <signal.h>
 #include "requestHandler.h"
 
 #define BACKLOG 1
@@ -88,6 +89,11 @@ sendError(int error) {
 }
 */
 
+void termHandler(int connFd) {
+    close(connFd);
+    printf("Closed connection\n");
+}
+
 int initSocket(struct in_addr address, int port) {
     struct sockaddr_in socketAddr;
     int socketFd;
@@ -156,6 +162,8 @@ int listenForConnections(int socketFd) {
             perror("Error accepting connection.\n");
             exit(EXIT_FAILURE);
         }
+
+        signal(SIGINT, termHandler);
 
         printf("Connection accepted.\n");
 
