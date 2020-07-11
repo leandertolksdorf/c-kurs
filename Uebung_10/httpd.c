@@ -8,14 +8,17 @@ Tutor: Leon Dirmeier
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <fcntl.h>
+#include "requestHandler.h"
 
 #define BACKLOG 1
 #define BUFSIZE 64
+#define REQUESTSIZE 2048
 
 int inet_aton(const char *cp, struct in_addr *addr);
 
@@ -54,6 +57,11 @@ connInstance(connFd) {
         - sendError(404)
 }
 
+handleRequest(requestBuf) {
+    - erstes "/" finden
+    
+}
+
 sendSuccess(int fd) {
     - Metadaten holen
         - Content-Type (stat???)
@@ -79,6 +87,7 @@ sendError(int error) {
     - Connection closen.
 }
 */
+
 int initSocket(struct in_addr address, int port) {
     struct sockaddr_in socketAddr;
     int socketFd;
@@ -105,7 +114,31 @@ int initSocket(struct in_addr address, int port) {
     return socketFd;
 }
 
-int listenForConnection(int socketFd) {
+void connInstance(int connFd) {
+    int recvBytes;
+    char requestBuf[REQUESTSIZE];
+    //char helloWorld[] = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: close\r\n\r\nHello, world!\n";
+
+    if((recvBytes = recv(connFd, requestBuf, REQUESTSIZE, 0)) < 0) {
+        perror("Error receiving request.\n");
+        exit(EXIT_FAILURE);
+    } else if (recvBytes > 0) {
+        printf("---RECEIVED REQUEST---\n%s\n---END OF REQUEST---\n", requestBuf);
+
+        char* requestPath = getRequestPath(requestBuf);
+        memset(requestBuf, 0, REQUESTSIZE);
+        printf("Requested path: %s\n", requestPath);
+
+        // Try to open file.
+        handleRequest(connFd, requestPath);
+    }
+
+    close(connFd);
+    printf("Connection closed.\n");
+    return;
+}
+
+int listenForConnections(int socketFd) {
 
     int connFd;
     
@@ -118,30 +151,20 @@ int listenForConnection(int socketFd) {
     printf("Listening.\n");
 
     // Accept incoming connection.
-    if((connFd = accept(socketFd, NULL, NULL)) < 0) {
-        perror("Error accepting connection.\n");
-        exit(EXIT_FAILURE);
-    }
+    while(1) {
+        if((connFd = accept(socketFd, NULL, NULL)) < 0) {
+            perror("Error accepting connection.\n");
+            exit(EXIT_FAILURE);
+        }
 
-    printf("Connection accepted.\n");
-    return connFd;
+        printf("Connection accepted.\n");
+
+        if(fork() == 0) {
+            connInstance(connFd);
+        }
+    }
 }
 
-void connInstance(int connFd) {
-    int recvBytes;
-    char requestBuf[BUFSIZE];
-    char helloWorld[] = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: close\r\n\r\nHello, world!";
-
-    if((recvBytes = recv(connFd, requestBuf, BUFSIZE, 0)) < 0) {
-        perror("Error receiving request.\n");
-        exit(EXIT_FAILURE);
-    } else if (recvBytes > 0) {
-        // Try opening file
-        send(connFd, helloWorld, sizeof(helloWorld), 0);
-        close(connFd);
-    }
-    exit(EXIT_SUCCESS);
-}
 
 int main(int argc, char* argv[]) {
 
@@ -152,18 +175,11 @@ int main(int argc, char* argv[]) {
     }
 
     struct in_addr addr; // for parsing address.
-    pid_t childPid; // For managing connection instances
 
     inet_aton(argv[1], &addr); // Convert argument ip and save to addr. struct
     int port = atoi(argv[2]);  // Convert argument port to int.
 
     int socketFd = initSocket(addr, port);
-    int connFd = listenForConnection(socketFd);
-
-    while(1) {
-        if ((childPid = fork()) == 0) {
-            // If child process, make connection instance.
-            connInstance(connFd);
-        }
-    }
+    
+    listenForConnections(socketFd);
 }

@@ -1,1 +1,1 @@
-httpd.o: httpd.c
+httpd.o: httpd.c requestHandler.h
