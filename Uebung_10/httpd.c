@@ -148,7 +148,7 @@ void connInstance(int connFd) {
     }
 
     close(connFd);
-    printf("> Connection closed.\n");
+    printf("Connection closed.\n");
     return;
 }
 
@@ -171,7 +171,7 @@ int serverRoutine(int socketFd) {
             exit(EXIT_FAILURE);
         }
 
-        printf("\nConnection accepted.\n");
+        printf("Connection accepted.\n");
 
         if(fork() == 0) {
             connInstance(connFd);

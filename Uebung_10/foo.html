@@ -21,11 +21,11 @@
         eine sorgsam geplante und loopfreie Route.<br>
     </p>
     <p>
-        Des Netzes verschlungene Topologie<br>
-        entwirr' ich mit Dijkstras Zeremonie.<br>
-        Der Lohn, eine herrliche Routingtabelle,<br>
-        dort steh'n sogar Routen zu Himmel und Hölle.<br>
-        Vergiftet der Rückweg, das Blickfeld gespalten,<br>
+
+        void sendError(int connFd) {
+            char error[] = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length: 20\r\nConnection: close\r\n\r\n404: File not found.";
+            send(connFd, error, sizeof(error), 0);
+        }ückweg, das Blickfeld gespalten,<br>
         mit RIP wird die Welt nur zum Narren gehalten.<br>
     </p>
     <p>
