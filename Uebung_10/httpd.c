@@ -73,10 +73,10 @@ void sendFile(int connFd, int fileFd, char* status, char* path) {
     //send(connFd, "Hallo\r\n", 8, 0);
 
     // Send file.
-    char fileBuf[64];
-    while((readBytes = read(fileFd, fileBuf, 64)) > 0) {
+    char fileBuf[BUFSIZE];
+    while((readBytes = read(fileFd, fileBuf, BUFSIZE)) > 0) {
         send(connFd, fileBuf, readBytes, 0);
-        memset(fileBuf, 0, 64);
+        memset(fileBuf, 0, BUFSIZE);
     }
     close(fileFd);
     send(connFd, "\r\n", 3, 0);
