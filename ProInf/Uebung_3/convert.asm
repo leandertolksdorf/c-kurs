@@ -1,113 +1,90 @@
-global strToInt
+GLOBAL strToInt
+GLOBAL intToStr
+SECTION .text
 
-section .text
-
-%macro power 2
-; 1. Argument: Basis, 2. Argument: Exponent, Ergebnis: rax:rdx
-
-  ; Register pushen, um später wiederherzustellen
-  push %1
-  push %2
-
-  ; Prüfen, ob Exponent 0 -> Dann Ergebnis = 1
-  cmp %2, 0
-  je %%expIsNull
-
-  ; Basis in rax für Multiplikation schreiben
-  mov rax, %1
-
-  ; Solange Exponent != 0: 
-  ; Basis mit sich selbst multiplizieren und Exponenten dekrementieren.
-  %%powerLoop:
-    dec %2
-    cmp %2, 0
-    je %%endPower
-    mul %1
-    jmp %%powerLoop
-
-  ; Wenn Exp = 0 -> 1 returnen
-  %%expIsNull:
-    mov rax, 1
-    mov rdx, 0
-  
-  ; Register wiederherstellen
-  %%endPower:
-    pop %2
-    pop %1
-
-%endmacro
-
-%macro asciiToInt 1
-; Konvertiert ASCII-Code in Ganzzahl. Bei Sonderzeichen -> Error und return
-; Geht nur mit Großbuchstaben
-
-  cmp %1, 48 ; Wenn kleiner als 48 -> Zeichen ungültig
-  jl %%invalid
-  cmp %1, 58 ; Wenn kleiner als 58 -> Ziffer
-  jl %%digit
-  cmp %1, 65 ; Wenn kleiner als 65 -> Zeichen ungültig
-  jl %%invalid
-  cmp %1, 91 ; Wenn kleiner als 91 -> Buchstabe
-  jl %%letter
-  jmp %%invalid ; Ansonsten -> Zeichen ungültig
-
-  %%digit:
-    ; Bei Ziffern -> 48 abziehen.
-    sub %1, 48
-    jmp %%end
-
-  %%letter:
-    ; Bei Buchstaben -> 55 abziehen 
-    ; ("A" = 10 im Zehnersystem, 65 in ASCII -> 65 - 55 = 10)
-    sub %1, 55
-    jmp %%end
-
-  %%invalid:
-    mov eax, 1 ; Interrupt-Funktion setzen -> exit()
-    mov ebx, 1 ; Return code setzen -> 1 wegen Error.
-    int 0x80   ; Interrupt senden 
-  
-  %%end:
-
-%endmacro
-
+; POWER FUNCTION
 strToInt:
 
-  mov rcx, 0
+    ; init variables
+    mov rcx, 0                                  ; initalize counter
+    mov rax, 0                                  ; initialize sum
 
-  ; Stringlänge ermitteln
+    ; loop iterating through characters
+    .loop:
+        ; extract character
+        push rdi                                ; save rdi string pointer
+        movzx rdi, byte [rdi + rcx]             ; move current char into rdi
 
-  _strLenLoop:
+        ; exit if string finished
+        cmp rdi, 0                              ; check whether char is NUL (0)
+        je .exit                                 ; if char is NUL, exit function
 
-    cmp [rdi + rcx], BYTE 0 ; Vergleiche Byte mit Null, um Nullterminator zu finden.
-    je _strTerm ; Wenn Nullterminator -> fertig.
-    inc rcx ; Zähler inkrementieren
-    jmp _strLenLoop
-  
-  _strTerm:
-    mov r8, rcx ; In r8 steht jetzt die Länge des Strings (ohne Nullterminator)
+        ; get character value
+        push rax                                ; save rax sum
+        call char_val                           ; call char value function
+        mov r8, rax                             ; move char value into r8
+        pop rax                                 ; restore rax sum
+        pop rdi                                 ; restore rdi string pointer
 
+        ; perform calculations for each character
+        mul rsi                                 ; multiply sum by rsi base
+        add rax, r8                             ; add char value code to sum
 
-; Von vorne nach hinten: Potenzen berechnen und aufaddieren
-  mov rcx, 0  ; rcx := Zähler für aktuelle Stelle
-  mov r10, 0  ; r10 := Zwischenergebnis
+        ;restart loop
+        inc rcx
+        jmp .loop
 
-  _hornerLoop:
-    dec r8
-    power rsi, r8 ; Erst: Basis ^ Exponenten (den Stellenwert) an Stelle rcx berechnen.
-    ; In rax:rdx steht jetzt (Basis ^ Exponent)
+    ; exit function
+    .exit:
+        ret                                     ; return sum in rax
+rdi = exponent
+rsi = base
+power:
+    mov rax, 1
+    .loop:
+        cmp rdi, 0
+        je .exit
+        mul rsi
+        dec rdi
+        jmp .loop
+    .exit:
+    ret
 
-    movzx r9, BYTE [rdi + rcx] ; ASCII Code des Zeichens an Stelle rcx in r9 schreiben.
+; ASCII CHARACTER VALUE FUNCTION
+; rdi = character
+char_val:
+    ; initialize char value into rax
+    mov rax, rdi
+    ; compare char to valid char types
+    ; jump to respective label
+    cmp rdi, '0'
+    jl .invalid
+    cmp rdi, '9'
+    jle .digit
+    cmp rdi, 'A'
+    jl .invalid
+    cmp rdi, 'Z'
+    jle .letter_big
+    cmp rdi, 'a'
+    jl .invalid
+    cmp rdi, 'z'
+    jle .letter_small
+    
+    ; char types
+    .digit:
+        sub rax, 48
+        jmp .exit
+    .letter_big:
+        sub rax, 55
+        jmp .exit
+    .letter_small:
+        sub rax, 87
+        jmp .exit
+    .invalid:
+        mov rax, -1
+    .exit:
+    ret
 
-    asciiToInt r9 ; ASCII Code in Integer konvertieren.
-    mul r9 ; rax:rdx = Ziffer * Stellenwert
-    add r10, rax ; Ergebnis zu Zwischenergebnis addieren.
-    cmp r8, 0 ; Wenn letzte Stelle -> Ende.
-    je _end
-    inc rcx ; Sonst: nächste Stelle.
-    jmp _hornerLoop
-  
-  _end:
-    mov rax, r10 ; Ergebnis in rax schreiben
-    ret ; und tschüss...
-
+; MAIN STRING TO INTEGER FUNCTION
+; rdi = string: pointer
+; rsi = base: integer

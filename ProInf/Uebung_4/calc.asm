@@ -28,16 +28,29 @@ calc_add:
   shr rax, 23 ; 1. Operand: VZ in ah, Charakteristik in al
   shr rbx, 23 ; 2. Operand: VZ in bh, Charakteristik in bl
   
+  ; Kleineren Exponenten ermitteln
   cmp al, bl
-  je _calculate
+  je _calculate ; Gleich -> Mantissen addieren
+  jg _alignExp2 ; exp1 > exp2 -> exp2 an exp1 angleichen
 
-  _alignExp:
-  ; todo: unterschiedliche charakteristik anpassen
-    
+  _alignExp1: ; al < bl
+    ; Differenz der Exponenten berechnen
+    mov cl, bl
+    sub cl, al
+    mov al, bl ; Der Exponent des Ergebnisses kommt in al.
+    shr ecx, cl ; 1. Mantisse um die Differenz nach rechts shiften
+
+    jmp _calculate
+
+  _alignExp2: ; al > bl
+    mov cl, al
+    sub cl, bl 
+    ; Hier ist der größere Exponent schon im richtigen Register, deshalb kein mov.
+    shr edx, cl ; 2. Mantisse um die Differenz nach rechts shiften
 
   _calculate:
     add ecx, edx ; ecx = Summe der Mantissen
-    
+
   _checkMantissa:
     ; Prüfen ob Mantisse zu weit links (durch Verundung)
     test ecx, 0xFF000000
