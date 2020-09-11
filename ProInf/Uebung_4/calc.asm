@@ -50,6 +50,7 @@ calc_add:
 
   _calculate:
     ; Für Negative -> ZK bilden
+    ; Beim ZK: Problem: neg negiert das komplette Register, wir wollen aber nur die 24 Bit negieren.
     test ah, 1
     jz _add
     neg ecx
@@ -59,6 +60,7 @@ calc_add:
 
     _add:
     add ecx, edx ; ecx = Summe der Mantissen
+    and ecx, 0xFFFFFF ; Overflow der ZK-Addition entfernen
 
   _checkMantissa:
     ; Prüfen ob Mantisse zu weit links (durch Verundung)
