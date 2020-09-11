@@ -49,13 +49,22 @@ calc_add:
     shr edx, cl ; 2. Mantisse um die Differenz nach rechts shiften
 
   _calculate:
+    ; Für Negative -> ZK bilden
+    test ah, 1
+    jz _add
+    neg ecx
+    test bh, 1
+    jz _add
+    neg edx
+
+    _add:
     add ecx, edx ; ecx = Summe der Mantissen
 
   _checkMantissa:
     ; Prüfen ob Mantisse zu weit links (durch Verundung)
     test ecx, 0xFF000000
     jnz _shiftRight
-    ; todo: prüfen, ob zu weit links
+    ; todo: prüfen, ob zu weit rechts
     jmp _writeBack
 
   _shiftRight:
