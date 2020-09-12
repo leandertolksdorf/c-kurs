@@ -1,6 +1,8 @@
 ; Op.1 steht in xmm0, Op.2 in xmm1. Ergebnis in xmm0
 ; xmm -> edx mit MOVD
 
+; BUG: alignExp benutzt das cl-Register, wo aber die Mantisse liegt.
+
 global calc_add
 
 section .text
@@ -35,41 +37,40 @@ calc_add:
 
   _alignExp1: ; al < bl
     ; Differenz der Exponenten berechnen
+    bp1:
     mov cl, bl
     sub cl, al
     mov al, bl ; Der Exponent des Ergebnisses kommt in al.
+    bp2:
     shr ecx, cl ; 1. Mantisse um die Differenz nach rechts shiften
-    
     jmp _calculate
 
   _alignExp2: ; al > bl
+    bp3:
     mov cl, al
     sub cl, bl 
+    bp4:
     ; Hier ist der größere Exponent schon im richtigen Register, deshalb kein mov.
     shr edx, cl ; 2. Mantisse um die Differenz nach rechts shiften
 
-  _calculate:
-    ; Für Negative -> ZK bilden
-    ; Beim ZK: Problem: neg negiert das komplette Register, wir wollen aber nur die 24 Bit negieren.
+  ; Wenn negativ -> Zweierkomplement bilden
+  _negFirst:
     test ah, 1
-    jz _add
+    jz _negSecond
     neg ecx
-    ;and ecx, 0x1FFFFFF
-
+  
+  _negSecond:
     test bh, 1
-    jz _add
+    jz _calculate
     neg edx
-    ;and edx, 0x1FFFFFF
 
-    _add:
+  _calculate:
     add ecx, edx ; ecx = Summe der Mantissen
     ; Prüfen, ob Ergebnis negativ
     test ecx, 0x80000000
     ; Wenn ja, ZK zurückbilden und VZ-Bit setzen
     jz _checkMantissa
-
     neg ecx
-    ;and ecx, 0x1FFFFFF
     mov ah, 1
 
   _checkMantissa:
