@@ -27,7 +27,7 @@ calc_add:
 
   shr rax, 23 ; 1. Operand: VZ in ah, Charakteristik in al
   shr rbx, 23 ; 2. Operand: VZ in bh, Charakteristik in bl
-  
+  ;bp1:
   ; Kleineren Exponenten ermitteln
   cmp al, bl
   je _calculate ; Gleich -> Mantissen addieren
@@ -39,7 +39,7 @@ calc_add:
     sub cl, al
     mov al, bl ; Der Exponent des Ergebnisses kommt in al.
     shr ecx, cl ; 1. Mantisse um die Differenz nach rechts shiften
-
+    
     jmp _calculate
 
   _alignExp2: ; al > bl
@@ -54,24 +54,42 @@ calc_add:
     test ah, 1
     jz _add
     neg ecx
+    ;and ecx, 0x1FFFFFF
+
     test bh, 1
     jz _add
     neg edx
+    ;and edx, 0x1FFFFFF
 
     _add:
     add ecx, edx ; ecx = Summe der Mantissen
-    and ecx, 0xFFFFFF ; Overflow der ZK-Addition entfernen
+    ; Prüfen, ob Ergebnis negativ
+    test ecx, 0x80000000
+    ; Wenn ja, ZK zurückbilden und VZ-Bit setzen
+    jz _checkMantissa
+
+    neg ecx
+    ;and ecx, 0x1FFFFFF
+    mov ah, 1
 
   _checkMantissa:
     ; Prüfen ob Mantisse zu weit links (durch Verundung)
     test ecx, 0xFF000000
     jnz _shiftRight
-    ; todo: prüfen, ob zu weit rechts
+    ; Prüfen, ob Mantisse zu weit rechts
+    test ecx, 0xFF800000
+    jz _shiftLeft
+    ; todo: prüfen, ob zu weit rechts und _shiftLeft
     jmp _writeBack
 
   _shiftRight:
     shr ecx, 1
-    inc al
+    inc al ; Exponenten erhöhen
+    jmp _checkMantissa
+
+  _shiftLeft:
+    shl ecx, 1
+    dec al ; Exponenten verringern
     jmp _checkMantissa
 
   _writeBack:
