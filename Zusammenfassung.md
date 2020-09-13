@@ -2,6 +2,31 @@
 
 # Rechnerarchitektur
 
+## Zahlensysteme
+
+#### Hexadezimal
+
+| Dezimal | Hexadezimal | Binär |
+| ------- | ----------- | ----- |
+| 0       |             |       |
+| 1       |             |       |
+| 2       |             |       |
+| 3       |             |       |
+| 4       |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+|         |             |       |
+
+
+
 ## Architekturen
 
 ### Mikroprozessor
@@ -247,9 +272,7 @@ Es gibt drei Arten von Data hazards:
 
 ##### Strukturkonflike (Structural hazards) 
 
-entstehen aus Sprüngen und anderen Kontrollfluss-Instruktionen.
 
-Ein Sprungbefehl verändert den Program Counter.
 
 **Lösungen zur Vermeidung von Sturkturkonflikten:**
 
