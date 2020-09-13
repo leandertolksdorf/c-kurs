@@ -1,8 +1,6 @@
 ; Op.1 steht in xmm0, Op.2 in xmm1. Ergebnis in xmm0
 ; xmm -> edx mit MOVD
 
-; BUG: alignExp benutzt das cl-Register, wo aber die Mantisse liegt.
-
 global calc_add
 
 section .text
@@ -29,51 +27,57 @@ calc_add:
 
   shr rax, 23 ; 1. Operand: VZ in ah, Charakteristik in al
   shr rbx, 23 ; 2. Operand: VZ in bh, Charakteristik in bl
-  ;bp1:
+  
   ; Kleineren Exponenten ermitteln
   cmp al, bl
   je _calculate ; Gleich -> Mantissen addieren
-  jg _alignExp2 ; exp1 > exp2 -> exp2 an exp1 angleichen
+  ja _alignExp2 ; exp1 > exp2 -> exp2 an exp1 angleichen
 
   _alignExp1: ; al < bl
     ; Differenz der Exponenten berechnen
-    bp1:
     mov cl, bl
     sub cl, al
     mov al, bl ; Der Exponent des Ergebnisses kommt in al.
-    bp2:
     shr ecx, cl ; 1. Mantisse um die Differenz nach rechts shiften
     jmp _calculate
 
   _alignExp2: ; al > bl
-    bp3:
     mov cl, al
     sub cl, bl 
-    bp4:
     ; Hier ist der größere Exponent schon im richtigen Register, deshalb kein mov.
     shr edx, cl ; 2. Mantisse um die Differenz nach rechts shiften
 
-  ; Wenn negativ -> Zweierkomplement bilden
-  _negFirst:
-    test ah, 1
-    jz _negSecond
-    neg ecx
-  
-  _negSecond:
-    test bh, 1
-    jz _calculate
-    neg edx
-
   _calculate:
+    ; Für Negative -> ZK bilden
+    ; Beim ZK: Problem: neg negiert das komplette Register, wir wollen aber nur die 24 Bit negieren.
+    test ah, 1
+    jz _checkSign2
+    neg ecx
+    ;and ecx, 0x1FFFFFF
+
+    _checkSign2:
+    test bh, 1
+    jz _add
+    neg edx
+    ;and edx, 0x1FFFFFF
+
+    _add:
     add ecx, edx ; ecx = Summe der Mantissen
     ; Prüfen, ob Ergebnis negativ
-    test ecx, 0x80000000
-    ; Wenn ja, ZK zurückbilden und VZ-Bit setzen
-    jz _checkMantissa
-    neg ecx
-    mov ah, 1
 
-  _checkMantissa:
+    test ecx, 0x80000000
+    ; Wenn ja, ZK zurückbilden und VZ-Bit auf 1 setzten, sonst auf 0.
+    jz _resultPositive
+
+    neg ecx
+    ;and ecx, 0x1FFFFFF
+    mov ah, 1
+    jmp _normalizeResult
+
+    _resultPositive:
+      mov ah, 0
+
+  _normalizeResult:
     ; Prüfen ob Mantisse zu weit links (durch Verundung)
     test ecx, 0xFF000000
     jnz _shiftRight
@@ -86,12 +90,12 @@ calc_add:
   _shiftRight:
     shr ecx, 1
     inc al ; Exponenten erhöhen
-    jmp _checkMantissa
+    jmp _normalizeResult
 
   _shiftLeft:
     shl ecx, 1
     dec al ; Exponenten verringern
-    jmp _checkMantissa
+    jmp _normalizeResult
 
   _writeBack:
     ; Hidden Bit entfernen durch Verundung
@@ -105,5 +109,4 @@ calc_add:
 
   _exit:
     movd xmm0, eax
-
     ret
