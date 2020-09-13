@@ -4,264 +4,248 @@ Felix Suhl, Leander Tolksdorf
 
 ## Aufgabe 1
 
-### 23 + 81
+### [ B+V ]
+Bei B+V Darstellung wird (meist) das Most-Significant-Bit als Vorzeichen-Bit verwendet; der maximale Betrag ist geringer.
 
-23 in Binär: 00010111
+- ### <ins>23 + 81</ins>
+    **23** in B+V: `0|0010111` \
+    **81** in B+V: `0|1010001`
 
-81 in Binär: 01010001
+    |          |      | (0)  | 0    | 0    | 1    | 0    | 1    | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | (0)  | 1    | 0    | 1    | 0    | 0        | 0    | 1    |
+    | Übertrag |      |      |      | 1    |      | 1    | 1        | 1    |      |
+    | Ergebnis |      | (0)  | 1    | 1    | 0    | 1    | 0        | 0    | 0    |
 
-#### B+V
+    Da zwei positive Zahlen addiert werden, ist das Vorzeichenbit des Ergebnisses 0.
 
-23 in B+V-Darstellung: 0|0010111
+    Ergebnis in B+V: `0|1101000` (**104**)
 
-81 in B+V-Darstellung: 0|1010001
+- ### <ins>36 - 14</ins>
+    **36** in B+V: `0|0100100` \
+    **-14** in B+V: `1|0001110`
 
-Da zwei positive Zahlen addiert werden, ist das Vorzeichenbit des Ergebnisses 0.
+    |          |      | (0)  | 0    | 1    | 0    | 0    | 1        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | (1)  | 1    | 1    | 1    | 0    | 0        | 1    | 0    |
+    | Übertrag |      | 1    | 1    |      |      |      |          |      |      |
+    | Ergebnis |      | (0)  | 0    | 0    | 1    | 0    | 1        | 1    | 0    |
 
-|          |      | (0)  | 0    | 0    | 1    | 0    | 1    | 1    | 1    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | (0)  | 1    | 0    | 1    | 0    | 0    | 0    | 1    |
-| Übertrag |      |      |      | 1    |      | 1    | 1    | 1    |      |
-| Ergebnis |      | (0)  | 1    | 1    | 0    | 1    | 0    | 0    | 0    |
+    Da das Ergebnis der Rechnung positiv ist, ist das Vorzeichenbit des Ergebnisses 0 und wir subtrahieren den zweiten vom ersten Betrag mittels Zweierkomplement. \
+    In B+V-Darstellung wird der Übertrag auf das reservierte Vorzeichen-Bit ignoriert. Das Ergbnis ist mit +22 trotzdem richtig.
 
-#### Einerkomplement
+    Ergebnis in B+V: `0|0010110` (**22**)
 
-23 im Einerkomplement: 00010111_2
+- ### <ins>72 - 87</ins>
+    **72** in B+V: `0|1001000` \
+    **-87** in B+V: `1|1010111`
 
-81 im Einerkomplement: 01010001_2
+    |                 |      | (0)  | 1    | 0    | 0    | 1        | 0    | 0    | 0    |
+    | --------------- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- | ---- |
+    |                 |      | (1)  | 0    | 1    | 0    |     1    | 0    | 0    | 1    |
+    | Übertrag        |      |      |      |      | 1    |          |      |      |      |
+    | Ergebnis im ZK  |      | (1)  | 1    | 1    | 1    | 0        | 0    | 0    | 1    |
+    | Ergebnis in B+V |      | (1)  | 0    | 0    | 0    | 1        | 1    | 1    | 1    |
 
-|          |      | 0    | 0    | 0    | 1    | 0    | 1    | 1    | 1    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 0    | 1    | 0    | 1    | 0    | 0    | 0    | 1    |
-| Übertrag |      |      |      | 1    |      | 1    | 1    | 1    |      |
-| Ergebnis |      | 0    | 1    | 1    | 0    | 1    | 0    | 0    | 0    |
+    Da das Ergebnis negativ ist, setzen wir das Vorzeichen-Bit auf 1 und rechnen die Subtraktion im Zweierkomplement. Danach muss der Betrag noch aus dem Zweierkomplement zurückgebildet werden, damit der Betrag positiv ist. \
 
-01101000_2 = 104_10
+    Ergebnis in B+V: `1|0001111` (**-15**)
 
-#### Zweierkomplement
+- ### <ins>-113 - 37</ins>
+    **-113** in B+V: `1|1110001` \
+    **-37** in B+V: `1|0100101`
 
-Im Zweierkomplement werden wie im Einerkomplement positive Zahlen normal dargestellt. Deshalb ist die Addition zweier positiver Zahlen hier die gleiche wie oben.
+    |          |      | (1)   | 1    | 1    | 1    | 0    |     0    | 0    | 1    |
+    | -------- | ---- | ----- | ---- | ---- | ---- | ---- |     ---- | ---- | ---- |
+    | +        |      | (1)   | 0    | 1    | 0    | 0    |     1    | 0    | 1    |
+    | Übertrag |      | **1** | 1    |      |      |        |      | 1    |      |
+    | Ergebnis |      | (1)   | 0    | 0    | 1    | 0    |     1    | 1    | 0    |
 
-#### Exzessdarstellung
+    Da beide Zahlen negativ sind, addieren wir einfach die Beträge und setzen das Vorzeichen Bit. \
+    Wir haben in der Addition einen Übertrag auf das Vorzeichenbit. Dadurch ist der Betrag falsch. Um das Ergebnis dieser Addition richtig darzustellen, benötigt es in der B+V-Darstellung mindestens 9 Bit.
 
-Wir wählen einen Offset von 128.
+    Falsches Ergebnis in B+V: `1|0010110` (**-150 nicht darstellbar mit 8-Bit B+V**)
 
-23 in Offset-128 = 128 + 23 = 151 = 10010111
+### [ Einerkompliment ]
+In einem Einerkompliment-System werden negative Binärzahlen als invertierte Binärzahlen dargestellt. Dabei wird beim binären Betrag der negativen Zahl alle Bits invertiert (umgedreht).
 
-81 in Offset-128 = 128 + 81 = 209 = 11010001
+- ### <ins>23 + 81</ins>
+    **23** im Einerkompliment: `00010111` \
+    **81** im Einerkompliment: `01010001`
 
-Addition:
+    |          |      | 0    | 0    | 0    | 1    | 0    | 1        | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 1    | 0    | 1    | 0    | 0        | 0    | 1    |
+    | Übertrag |      |      |      | 1    |      | 1    | 1        | 1    |      |
+    | Ergebnis |      | 0    | 1    | 1    | 0    | 1    | 0        | 0    | 0    |
 
-|          |      | 1    | 0    | 0    | 1    | 0    | 1    | 1    | 1    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 1    | 0    | 1    | 0    | 0    | 0    | 1    |
-| Übertrag | 1    |      |      | 1    |      | 1    | 1    | 1    |      |
-| Ergebnis | 1    | 0    | 1    | 1    | 0    | 1    | 0    | 0    | 0    |
+    Ergebnis im Einerkompliment: `01101000` (**104**)
 
-Das Ergebnis ist 360. Davon den Offset abziehen -> 232 = 11101000
+- ### <ins>36 - 14</ins>
+    **36** im Einerkompliment: `00100100` \
+    **-14** im Einerkompliment: `11110001`
 
-### 36 - 14
+    |          |      | 0    | 0    | 1    | 0    | 0    | 1        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 1    | 1    | 1    | 0    | 0        | 0    | 1    |
+    | Übertrag | 1    | 1    | 1    |      |      |      |          |      |      |
+    | Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1        | 0    | 1    |
 
-36 in Binär: 00100100
+    Da wir einen Übertrag haben, müssen wir diesen noch auf das     Zwischenergebnis addieren:
 
-14 in Binär: 00001110
+    |          |      | 0    | 0    | 0    | 1    | 0    | 1        | 0    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 0    | 0    | 0    | 0    | 0        | 0    | 1    |
+    | Übertrag |      |      |      |      |      |      |          | 1    |      |
+    | Ergebnis |      | 0    | 0    | 0    | 1    | 0    | 1        | 1    | 0    |
 
-#### B+V
+    Ergebnis im Einerkompliment: `00010110` (**22**)
 
-36 in B+V-Darstellung: 0|0100100
+- ### <ins>72 - 87</ins>
+    **72** im Einerkompliment: `01001000` \
+    **-87** im Einerkompliment: `10101000`
 
--14 in B+V-Darstellung: 1|0001110
+    |          |      | 0    | 1    | 0    | 0    | 1    | 0        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 0    | 1    | 0    | 1    | 0        | 0    | 0    |
+    | Übertrag |      |      |      |      | 1    |      |          |      |      |
+    | Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0        | 0    | 0    |
 
-Da das Ergebnis der Rechnung positiv ist, ist das Vorzeichenbit des Ergebnisses 0 und wir subtrahieren den zweiten vom ersten Betrag mittels Zweierkomplement.
+    Ergebnis im Einerkompliment: `1110000` (**-15**)
 
-|          |      | (0)  | 0    | 1    | 0    | 0    | 1    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | (1)  | 1    | 1    | 1    | 0    | 0    | 1    | 0    |
-| Übertrag |      | 1    | 1    |      |      |      |      |      |      |
-| Ergebnis |      | (0)  | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
+- ### <ins>-113 - 37</ins>
+    **-113** im Einerkompliment: `10001110` \
+    **-37** im Einerkompliment: `11011010`
 
-In B+V-Darstellung wird der Übertrag auf das reservierte Vorzeichen-Bit ignoriert. Das Ergebnis ist mit +22 trotzdem richtig.
+    |          |      | 1    | 0    | 0    | 0    | 1    | 1        | 1    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 1    | 0    | 1    | 1    | 0        | 1    | 0    |
+    | Übertrag | 1    |      |      | 1    | 1    | 1    | 1        |      |      |
+    | Ergebnis | 1    | 0    | 1    | 1    | 0    | 1    | 0        | 0    | 0    |
 
-#### Einerkomplement
+    Der Übertrag muss noch auf das Zwischenergebnis addiert werden, also ist das Ergebnis:
 
-Einerkomplement von +36: 00100100
+    Falsches Ergebnis im Einerkompliment: `01101000` (**-150 nicht darstellbar**) \
+    Nur Zahlen von -127 bis 127 können im 8-Bit Einerkompliment dargestellt werden)
 
-Einerkomplement von -14:  11110001
+### [ Zweierkompliment ]
+In einem Zweierkompliment-System werden negative Binärzahlen auch invertiert dargestellt, nur wird die invertierten Darstellung zusätzlich mit 1 addiert.
 
-|          |      | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
-| Übertrag | 1    | 1    | 1    |      |      |      |      |      |      |
-| Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1    | 0    | 1    |
+- ### <ins>23 + 81</ins>
+    **23** im Zweierkompliment: `00010111` \
+    **81** im Zweierkompliment: `01010001`
 
-Da wir einen Übertrag haben, müssen wir diesen noch auf das Zwischenergebnis addieren:
+    |          |      | 0    | 0    | 0    | 1    | 0    | 1        | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 1    | 0    | 1    | 0    | 0        | 0    | 1    |
+    | Übertrag |      |      |      | 1    |      | 1    | 1        | 1    |      |
+    | Ergebnis |      | 0    | 1    | 1    | 0    | 1    | 0        | 0    | 0    |
 
-|          |      | 0    | 0    | 0    | 1    | 0    | 1    | 0    | 1    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 1    |
-| Übertrag |      |      |      |      |      |      |      | 1    |      |
-| Ergebnis |      | 0    | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
+    Ergebnis im Zweierkompliment: `01101000` (**104**)
 
-Das Ergebnis ist also 00010110_2 = 22_10
+- ### <ins>36 - 14</ins>
+    **36** im Zweierkompliment: `00100100` \
+    **-14** im Zweierkompliment: `11110010`
 
-#### Zweierkomplement
+    |          |      | 0    | 0    | 1    | 0    | 0    | 1        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 1    | 1    | 1    | 0    | 0        | 1    | 0    |
+    | Übertrag | 1    | 1    | 1    |      |      |      |          |      |      |
+    | Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1        | 1    | 0    |
 
-Zweierkomplement von 36: 00100100
+    Der Übertrag wird im Zweierkomplement verworfen.
 
-Zweierkomplement von -14: 11110010 (Einerkomplement + 1)
+    Ergebnis im Zweierkomplement: `00010110` (**22**)
 
-|          |      | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 1    | 1    | 1    | 0    | 0    | 1    | 0    |
-| Übertrag | 1    | 1    | 1    |      |      |      |      |      |      |
-| Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
+- ### <ins>72 - 87</ins>
+    **72** im Zweierkomplement: `01001000` \
+    **-87** im Zweierkomplement: `10101001`
 
-Der Übertrag wird im Zweierkomplement verworfen, also ist das Ergebnis:
+    |          |      | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+    | +        |      | 1    | 0    | 1    | 0    | 1    | 0    | 0    | 1    |
+    | Übertrag |      |      |      |      | 1    |      |      |      |      |
+    | Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
 
-00010110_2 = 22_10
+    Ergebnis im Zweierkomplement: `1110001` (**-15**)
 
-#### Exzessdarstellung
+- ### <ins>-113 - 37</ins>
+    **-113** im Zweierkomplement: `10001111` \
+    **-37** im Zweierkomplement: `11011011`
 
-36 in Exzess-128: 128 + 36 = 164 = 10100100
+    |          |      | 1    | 0    | 0    | 0    | 1    | 1        | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 1    | 0    | 1    | 1    | 0        | 1    | 1    |
+    | Übertrag | 1    |      |      | 1    | 1    | 1    | 1        | 1     |      |
+    | Ergebnis | 1    | 0    | 1    | 1    | 0    | 1    | 0        | 1    | 0    |
 
--14 in Exzess-128: 128 - 14 = 114 = 01110010
+    Falsches Ergebnis im Zweierkomplement: `01101010` (**-150 nicht darstellbar**) \
+    Nur Zahlen von -128 bis 127 können im 8-Bit Zweierkompliment dargestellt werden)
 
-|          |      | 1    | 0    | 1    | 0    | 0    | 1    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 0    | 1    | 1    | 1    | 0    | 0    | 1    | 0    |
-| Übertrag | 1    | 1    | 1    |      |      |      |      |      |      |
-| Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
 
-Das Ergebnis ist 278. Davon muss noch ein mal der Offset angezogen werden: 150.
+### [ Exzessdarstellung ]
+In einem Exzess-System wird ein Offset gewählt der als Wert für die Null fungiert. Unser Offset ist 128, das ist der Wert des Most-Significant-Bits bei normalen 8-Bit Binärzahlen, und ist somit circa die Hälfte zwischen 0 und der maximal darstellbaren Zahl 255. Außerdem ist 128 praktisch, da man das MSB einfach von Ergebnissen subtrahieren kann.
 
-150 in Offset-128-Darstellung entspricht = 150 - 128 = 22. Das ist richtig.
+- ### <ins>23 + 81</ins>
+    **23** in Exzessdarstellung: `10010111` \
+    **81** in Exzessdarstellung: `11010001`
 
-Also ist das Endergebnis: 10010110 = 150.
+    |          |      | 1    | 0    | 0    | 1    | 0    | 1        | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 1    | 1    | 0    | 1    | 0    | 0        | 0    | 1    |
+    | Übertrag | 1    |      |      | 1    |      | 1    | 1        | 1    |      |
+    | Ergebnis | 1    | 0    | 1    | 1    | 0    | 1    | 0        | 0    | 0    |
 
-### 72 - 87
+    Das Ergebnis ist 360. Davon den Offset abziehen -> 232 = `11101000`, man erhält das Ergebnis in Exzessdarstellung.
 
-72 in Binär: 01001000
+    Ergebnis im Exzessdarstellung: `11101000` (**104**)
 
-87 in Binär: 01010111
+- ### <ins>36 - 14</ins>
+    **36** in Exzessdarstellung: `10100100` \
+    **-14** in Exzessdarstellung: `01110010`
 
-#### B+V
+    |          |      | 1    | 0    | 1    | 0    | 0    | 1        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 1    | 1    | 1    | 0    | 0        | 1    | 0    |
+    | Übertrag | 1    | 1    | 1    |      |      |      |          |      |      |
+    | Ergebnis | 1    | 0    | 0    | 0    | 1    | 0    | 1        | 1    | 0    |
 
-72 in B+V-Darstellung: (0)1001000
+    Das Ergebnis ist 278. Davon muss noch ein Mal der Offset abgezogen werden: 150 – Ergebnis in Exzessdarstellung.
 
--87 in B+V-Darstellung: (1)1010111
+    Ergebnis im Exzessdarstellung: `10010110` (**22**)
 
-Da das Ergebnis negativ ist, setzen wir das Vorzeichen-Bit auf 1 und rechnen die Subtraktion im Zweierkomplement. Danach muss der Betrag noch aus dem Zweierkomplement zurückgebildet werden, damit der Betrag positiv ist.
+- ### <ins>72 - 87</ins>
+    **72** in Exzessdarstellung: `11001000` \
+    **-87** in Exzessdarstellung: `00101001`
 
-|                 |      | (0)  | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
-| --------------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-|                 |      | (1)  | 0    | 1    | 0    | 1    | 0    | 0    | 1    |
-| Übertrag        |      |      |      |      | 1    |      |      |      |      |
-| Ergebnis im ZK  |      | (1)  | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
-| Ergebnis in B+V |      | (1)  | 0    | 0    | 0    | 1    | 1    | 1    | 1    |
+    |          |      | 1    | 1    | 0    | 0    | 1    | 0        | 0    | 0    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 0    | 1    | 0    | 1    | 0        | 0    | 1    |
+    | Übertrag |      |      |      |      | 1    |      |          |      |      |
+    | Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0        | 0    | 1    |
 
-Das Ergebnis entspricht -15.
+    Das Ergebnis ist 241. Davon ein mal den Offset abziehen: 113 = `01110001`
 
-#### Einerkomplement
+    Ergebnis im Exzessdarstellung: `01110001` (**-15**)
 
-72 im Einerkomplement: 01001000
+- ### <ins>-113 - 37</ins>
+    **-113** in Exzessdarstellung: `00001111` \
+    **-37** in Exzessdarstellung: `01011011`
 
--87 im Einerkomplement: 10101000
+    |          |      | 0    | 0    | 0    | 0    | 1    | 1        | 1    | 1    |
+    | -------- | ---- | ---- | ---- | ---- | ---- | ---- | ----     | ---- | ---- |
+    | +        |      | 0    | 1    | 0    | 1    | 1    | 0        | 1    | 1    |
+    | Übertrag |      |      |      | 1    | 1    | 1    | 1        | 1    |      |
+    | Ergebnis |      | 0    | 1    | 1    | 0    | 1    | 0        | 1    | 0    |
 
-|          |      | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 0    | 1    | 0    | 1    | 0    | 0    | 0    |
-| Übertrag |      |      |      |      | 1    |      |      |      |      |
-| Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0    | 0    | 0    |
 
-Das Ergebnis ist 1110000_2, was im Einerkomplement der -15 entspricht.
+    Würden wir nun den Offset abziehen, käme eine negative Zahl raus. Da Bitfolgen in der Exzessdarstellung aber als positive Zahlen interpretiert werden, ist diese Rechnung nicht darstellbar. Dafür bräuchte es mindestens 9 Bits, da dann Negativzahlen bis -256 darstellbar sind. (In Offset-256 wäre das Ergebnis dann 106)
 
-#### Zweierkomplement
-
-72 im Zweierkomplement: 01001000
-
--87 im Zweierkomplement: 10101001 (Einerkomplement + 1)
-
-|          |      | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 0    | 1    | 0    | 1    | 0    | 0    | 1    |
-| Übertrag |      |      |      |      | 1    |      |      |      |      |
-| Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
-
-Das Ergebnis entspricht im Zweierkomplement der -15 und ist damit korrekt.
-
-#### Exzessdarstellung
-
-72 in Offset-128-Darstellung: 128 + 72 = 200 = 11001000
-
--87 in Offset-128-Darstellung: 128 - 87 = 41 = 00101001
-
-|          |      | 1    | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 0    | 0    | 1    | 0    | 1    | 0    | 0    | 1    |
-| Übertrag |      |      |      |      | 1    |      |      |      |      |
-| Ergebnis |      | 1    | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
-
-Das Ergebnis ist 241. Davon ein mal den Offset abziehen: 113 = 01110001
-
-### -113 - 37
-
-113 in Binär: 01110001
-
-37 in Binär: 00100101
-
-#### B+V
-
--113 in B+V-Darstellung: (1)1110001
-
--37 in B+V-Darstellung: (1)0100101
-
-Da beide Zahlen negativ sind, addieren wir einfach die Beträge und setzen das Vorzeichen Bit.
-
-|          |      | (1)   | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
-| -------- | ---- | ----- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | (1)   | 0    | 1    | 0    | 0    | 1    | 0    | 1    |
-| Übertrag |      | **1** | 1    |      |      |      |      | 1    |      |
-| Ergebnis |      | (1)   | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
-
-Wir haben in der Addition einen Übertrag auf das Vorzeichenbit. Dadurch ist der Betrag falsch. Um das Ergebnis dieser Addition richtig darzustellen, benötigt es in der B+V-Darstellung mindestens 9 Bit.
-
-#### Einerkomplement
-
--113 im Einerkomplement: 10001110
-
--37 im Einerkomplement: 11011010
-
-|          |      | 1    | 0    | 0    | 0    | 1    | 1    | 1    | 0    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 1    | 1    | 0    | 1    | 1    | 0    | 1    | 0    |
-| Übertrag | 1    |      |      | 1    | 1    | 1    | 1    |      |      |
-| Ergebnis | 1    | 0    | 1    | 1    | 0    | 1    | 0    | 0    | 0    |
-
-Der Übertrag muss noch auf das Zwischenergebnis addiert werden, also ist das Ergebnis:
-
-01101001_2. Das entspricht im Einerkomplement jedoch +105 und ist nicht korrekt, da im 8-Bit-Einerkomplement nur Zahlen mit einem Betrag kleiner gleich 127 darstellbar sind.
-
-#### Zweierkomplement
-
-Auch im Zweierkomplement ist durch das Vorzeichenbit der Wertebereich auf -127...127 begrenzt, weshalb diese Berechnung ein falsches Ergebnis hätte.
-
-#### Exzessdarstellung
-
--113 in Offset-128: 128 - 113 = 15 = 00001111
-
--37 in Offset-128: 128 - 37 = 91 = 01011011
-
-|          |      | 0    | 0    | 0    | 0    | 1    | 1    | 1    | 1    |
-| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| +        |      | 0    | 1    | 0    | 1    | 1    | 0    | 1    | 1    |
-| Übertrag |      |      |      | 1    | 1    | 1    | 1    | 1    |      |
-| Ergebnis |      | 0    | 1    | 1    | 0    | 1    | 0    | 1    | 0    |
-
-Würden wir nun den Offset abziehen, käme eine negative Zahl raus. Da Bitfolgen in der Exzessdarstellung aber als positive Zahlen interpretiert werden, ist diese Rechnung nicht darstellbar. Dafür bräuchte es mindestens 9 Bits, da dann Negativzahlen bis -256 darstellbar sind. (In Offset-256 wäre das Ergebnis dann 106)
 
 ## Aufgabe 2
 
-TODO
+![](image0.jpeg)
+![](image1.jpeg)
 
 ## Aufgabe 3
 
