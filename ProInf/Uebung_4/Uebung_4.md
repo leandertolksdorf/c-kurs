@@ -12,7 +12,19 @@ Felix Suhl, Leander Tolksdorf
 
 #### B+V
 
-TODO
+23 in B+V-Darstellung: 0|0010111
+
+81 in B+V-Darstellung: 0|1010001
+
+Da zwei positive Zahlen addiert werden, ist das Vorzeichenbit des Ergebnisses 0.
+
+|          |      | (0)  | 0    | 0    | 1    | 0    | 1    | 1    | 1    |
+| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| +        |      | (0)  | 1    | 0    | 1    | 0    | 0    | 0    | 1    |
+| Übertrag |      |      |      | 1    |      | 1    | 1    | 1    |      |
+| Ergebnis |      | (0)  | 1    | 1    | 0    | 1    | 0    | 0    | 0    |
+
+
 
 #### Einerkomplement
 
@@ -34,7 +46,13 @@ Im Zweierkomplement werden wie im Einerkomplement positive Zahlen normal dargest
 
 #### Exzessdarstellung
 
-TODO
+Wir wählen einen Offset von 81.
+
+23 in Offset-128: | 23 - 81 | = 58 = 00111010_Offset-81
+
+81 in Offset-128: | 81 - 81 | = 0 = 00000000_Offset-81
+
+
 
 ### 36 - 14
 
@@ -44,7 +62,19 @@ TODO
 
 #### B+V
 
-TODO
+36 in B+V-Darstellung: 0|0100100
+
+-14 in B+V-Darstellung: 1|0001110
+
+Da das Ergebnis der Rechnung positiv ist, ist das Vorzeichenbit des Ergebnisses 0 und wir subtrahieren den zweiten vom ersten Betrag mittels Zweierkomplement.
+
+|          |      | (0)  | 0    | 1    | 0    | 0    | 1    | 0    | 0    |
+| -------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| +        |      | (1)  | 1    | 1    | 1    | 0    | 0    | 1    | 0    |
+| Übertrag |      | 1    | 1    |      |      |      |      |      |      |
+| Ergebnis |      | (0)  | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
+
+In B+V-Darstellung wird der Übertrag auf das reservierte Vorzeichen-Bit ignoriert. Das Ergbnis ist mit +22 trotzdem richtig.
 
 #### Einerkomplement
 
@@ -96,7 +126,20 @@ TODO
 
 #### B+V
 
-TODO
+72 in B+V-Darstellung: (0)1001000
+
+-87 in B+V-Darstellung: (1)1010111
+
+Da das Ergebnis negativ ist, setzen wir das Vorzeichen-Bit auf 1 und rechnen die Subtraktion im Zweierkomplement. Danach muss der Betrag noch aus dem Zweierkomplement zurückgebildet werden, damit der Betrag positiv ist.
+
+|                 |      | (0)  | 1    | 0    | 0    | 1    | 0    | 0    | 0    |
+| --------------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+|                 |      | (1)  | 0    | 1    | 0    | 1    | 0    | 0    | 1    |
+| Übertrag        |      |      |      |      | 1    |      |      |      |      |
+| Ergebnis im ZK  |      | (1)  | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
+| Ergebnis in B+V |      | (1)  | 0    | 0    | 0    | 1    | 1    | 1    | 1    |
+
+Das Ergebnis entspricht -15.
 
 ### Einerkomplement
 
@@ -138,7 +181,19 @@ TODO
 
 #### B+V
 
-TODO
+-113 in B+V-Darstellung: (1)1110001
+
+-37 in B+V-Darstellung: (1)0100101
+
+Da beide Zahlen negativ sind, addieren wir einfach die Beträge und setzen das Vorzeichen Bit.
+
+|          |      | (1)   | 1    | 1    | 1    | 0    | 0    | 0    | 1    |
+| -------- | ---- | ----- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| +        |      | (1)   | 0    | 1    | 0    | 0    | 1    | 0    | 1    |
+| Übertrag |      | **1** | 1    |      |      |      |      | 1    |      |
+| Ergebnis |      | (1)   | 0    | 0    | 1    | 0    | 1    | 1    | 0    |
+
+Wir haben in der Addition einen Übertrag auf das Vorzeichenbit. Dadurch ist der Betrag falsch. Um das Ergebnis dieser Addition richtig darzustellen, benötigt es in der B+V-Darstellung mindestens 9 Bit.
 
 #### Einerkomplement
 
@@ -275,8 +330,6 @@ in Dezimal:
 = 591.271850585937408
 
 ```
-
-
 
 
 
