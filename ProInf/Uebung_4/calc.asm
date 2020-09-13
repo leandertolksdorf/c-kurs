@@ -51,11 +51,11 @@ calc_add:
     ; Für Negative -> ZK bilden
     ; Beim ZK: Problem: neg negiert das komplette Register, wir wollen aber nur die 24 Bit negieren.
     test ah, 1
-    jz _negMan2
+    jz _checkSign2
     neg ecx
     ;and ecx, 0x1FFFFFF
 
-    _negMan2:
+    _checkSign2:
     test bh, 1
     jz _add
     neg edx
@@ -109,5 +109,4 @@ calc_add:
 
   _exit:
     movd xmm0, eax
-
     ret
