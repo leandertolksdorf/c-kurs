@@ -1,7 +1,7 @@
 file ./calc
 layout asm
 layout regs
-set args -2 1
+set args 1.2 3.4
 b bp1
 b bp2
 b bp3
