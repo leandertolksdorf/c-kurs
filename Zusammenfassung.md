@@ -216,6 +216,10 @@ Mit Pipelining sind möglichst immer alle Phasen aktiv. Das erreicht man durch n
 
 ![](pipelining.png)
 
+#### MIPS-Pipeline
+
+
+
 #### Probleme
 
 ##### Datenkonflikte (Data hazards)
@@ -363,3 +367,146 @@ Dieses Problem löst der *Two-bit-predictor.*
 *Saturation counter scheme*
 
 ![](two_bit_predictor_sc.png)
+
+
+
+# Klausurfragen
+
+### Mikrocomputer
+
+Ein Microcomputer ist ein Computer, der nur aus einem Mikroprozessor, Bus-System, Haupt- und Massenspeicher und IO-Geräten besteht. Damit sind die meisten heutigen Anwender-PCs (Notebooks etc.) Mikrocomputer.
+
+### Mikroprozessor
+
+Ein Mikroprozessor ist ein Prozessor, der alle benötigten Komponenten, also ALU, Bus-System,  auf einem einzigen Mikrochip unterbringt.
+
+### Mikrobefehl
+
+Ein Mikrobefehl ist eine elementare Anweisung zur Steuerung eines Prozessors.
+
+### Lokalitätsprinzip
+
+Das Lokalitätsprinzip besagt, dass Daten, die einmal gebraucht wurden, mit hoher Wahrscheinlichkeit nochmal gebraucht werden.
+
+Es wird unterschieden in:
+
+- *zeitliche Lokalität:* Zuvor benutzte Adressräume werden wahrscheinlich auch in der folgenden Zeit wieder benutzt. 
+- *örtliche Lokalität:* Wird auf eine Adresse zugegriffen, erfolgt der nächste Zugriff wahrscheinlich auf eine naheliegende oder die gleiche Adresse.
+
+Dieses Prinzip macht man sich auf vielen Ebenen zur Steigerung der Leistung zu Nutze.
+
+### Memory Management Unit (MMU)
+
+Wandelt logische in physikalische Adressen um.
+
+### Kernel
+
+Der Kernel ist Hauptbestandteil (Kern) des Betriebssystems  und organisiert:
+
+- die Steuerung der Prozessor- und Speicherzugriffe
+- Treiber für I/O-Systeme
+- Zugriff auf Hardwarekomponenten
+
+### Mikrokernel
+
+Ein Mikrokernel ist ein stark reduzierter Kernel. Anders als ein monolithischer Kernel übernimmt ein Mikrokernel nur Prozess- und Speicherverwaltung. Weitere Funktionen werden aus dem Kernel ausgelagert.
+
+Vorteile:
+
+- Mehr Übersicht
+- Flexibler (weil höhere Modularisierbarkeit)
+
+Nachteile:
+
+- Mehr Kommunikation zwischen Komponenten nötig.
+
+### Betriebssystem
+
+Das Betriebssystem ist sogesehen Vermittler
+
+### Scheduler
+
+Ein Scheduler regelt, welcher Prozess zu welchem Zeitpunkt wie lange ausgeführt wird und wann/ob dieser unterbrochen wird.
+
+Drei Hauptkriterien für einen guten Scheduler:
+
+- Hohe Anzahl von abgearbeiteten Prozessen in kurzer Zeit (Durchsatz)
+- Möglichst komplette Auslastung der verfügbaren Rechenleistung (Effizienz)
+- Gerechte Aufteilung der Rechenzeit auf alle Prozesse, also keine Vernachlässigung von Prozessen (Fairness)
+
+Scheduler können aufgeteilt werden in:
+
+- preemptive: Prozesse können unterbrochen werden
+- non preemptive: Prozesse können, einmal gestartet, nicht unterbrochen werden können.
+
+Strategien:
+
+FCFS: First come first serve
+
+Round Robin: Jeder Prozess kriegt eine feste Zeitspanne und es wird durchgewechselt.
+
+SPN: Shortest Process Next
+
+SRT: Shortest Remaining Time
+
+HRRN: Highest Response Rate Next: (time spent waiting + expected service time) / expected service time
+
+![](scheduling.png)
+
+### fork()
+
+Beim Aufruf von fork() im Elternprozess wird ein Kindprozess (mit gleichen Speicherinhalten) erstellt und dem Elternprozess die PID des Kind-Prozesses zurückgegeben. Nun ist anhand des Rückgabewerts erkennbar, ob ein Prozess Kind- oder Elternprozess ist. Ist dieser 0, befinden wir uns im Kindprozess. Ansonsten (Rückgabewert > 0) befinden wir uns im Elternprozess.
+
+```c
+if((pid_t pid = fork()) == 0) {
+    printf("Kindprozess\n");
+} else {
+    printf("Elternprozess\n");
+}
+```
+
+### Fragmentierung
+
+Ist für eine Datei kein ausreichender zusammenhängender Speicherplatz verfügbar, wird sie gestückelt auf freie Speicherbereiche aufgeteilt.
+
+### Assembler-Sprache
+
+Eine Assemblersprache wie NASM ist eine Programmiersprache, die direkt auf dem Instruction Set eines Prozessors zugreift. Sie ist die menschenlesbare Vorstufe von Maschinencode
+
+### Assembler
+
+Der Assembler übersetzt Assemblersprache in reinen Maschinencode.
+
+### Zweier- & Einerkomplementdarstellung
+
+In der
+
+### Dateisystem
+
+Neben der eigentlichen Datei werden Metadaten wie:
+
+- Zugriffsrechte
+- Dateityp
+- Nutzungsdaten (Zuletzt geändert)
+- Dateinamen, Dateigröße
+
+### Skalare & Superskalare Pipeline
+
+### Cache mit hoher / geringer Satzassoziativität
+
+*hohe Satzassoziativität:* Geringer Suchaufwand, aber möglicherweise ineffiziente Speicherplatznutzung
+
+*niedrige Satzassoziativität:* Höherer Suchaufwand in den einzelnen Speicherbereichen, dafür mehr Platz für gleichartige Daten.
+
+### CISC/RISC
+
+![](cisc_risc.jpg)
+
+#### Manchester Codierung
+
+1: 0-1 Flanke
+
+0: 1-0 Flanke
+
+### Floating Point
+

@@ -1,0 +1,10 @@
+file ./calc
+layout asm
+layout regs
+set args -2 1
+b bp1
+b bp2
+b bp3
+b bp4
+b bp5
+run
