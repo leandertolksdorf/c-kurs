@@ -1,0 +1,6 @@
+file fib
+layout asm
+layout regs
+set args 5
+b asm_fib_rek.debug
+run
