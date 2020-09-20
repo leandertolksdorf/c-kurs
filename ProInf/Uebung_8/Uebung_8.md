@@ -107,6 +107,8 @@ sll $s, $s, C
 or $s, $s, $t0
 ```
 
+Bei CISC werden Makrobefehle erst interpretiert und dann als Folge von Mikrobefehlen ausgeführt. In RISC gibt es den Schritt der Interpretation nicht, sondern die Befehle werden direkt von der Hardware ausgeführt. 
+
 ### Aufgabe 3
 
 #### 1. Superskalare Pipeline
@@ -149,3 +151,6 @@ Die einfache Pipeline braucht für die Abarbeitung 9 Takte mehr als die superska
 #### 3. Beschleunigungsmaßnahmen für die superskalare Pipeline
 
 - Eine Vergrößerung der IF- und ID-Einheiten würde die Abarbeitung beschleunigen, da dann bei Dependencies im IW mehr Alternativen zur Auswahl stünden. In Takt 4 könnte sich dann Instruktion 4 schon in Ausführung befinden.
+- Anpassung der FCFS-Richtlinie, sodass zukünftige Abhängigkeiten beachtet werden. Das heißt zum Beispiel: Ist 4 von 3 abhängig und nichts von 2, so sollte 3 vor 2 ausgeführt werden, um möglichst schnell die Ausführung von 4 zu ermöglichen.
+- Forwarding zwischen den Ausführungseinheiten
+
