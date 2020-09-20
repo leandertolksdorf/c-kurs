@@ -1,0 +1,6 @@
+file bubblesort
+layout asm
+layout regs
+set args 5
+b sort.debug
+run
