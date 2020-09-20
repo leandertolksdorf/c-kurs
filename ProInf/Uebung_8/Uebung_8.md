@@ -4,7 +4,7 @@
 
 ### Aufgabe 1
 
-![Tomasulo_Tabelle - page 1](Tomasulo_Tabelle/Tomasulo_Tabelle - page 1.png)
+![Tomasulo_Tabelle - page 1](./Tomasulo_Tabelle/Tomasulo_Tabelle - page 1.png)
 
 ![Tomasulo_Tabelle - page 2](Tomasulo_Tabelle/Tomasulo_Tabelle - page 2.png)
 
