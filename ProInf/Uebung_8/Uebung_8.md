@@ -4,21 +4,21 @@
 
 ### Aufgabe 1
 
-![Tomasulo_Tabelle - page 1](./Tomasulo_Tabelle/Tomasulo_Tabelle - page 1.png)
+![Tomasulo_Tabelle - page 1](Tomasulo_Tabelle/tomasulo_01.png)
 
-![Tomasulo_Tabelle - page 2](Tomasulo_Tabelle/Tomasulo_Tabelle - page 2.png)
+![Tomasulo_Tabelle - page 2](Tomasulo_Tabelle/tomasulo_02.png)
 
-![Tomasulo_Tabelle - page 3](Tomasulo_Tabelle/Tomasulo_Tabelle - page 3.png)
+![Tomasulo_Tabelle - page 3](Tomasulo_Tabelle/tomasulo_03.png)
 
-![Tomasulo_Tabelle - page 4](Tomasulo_Tabelle/Tomasulo_Tabelle - page 4.png)
+![Tomasulo_Tabelle - page 4](Tomasulo_Tabelle/tomasulo_04.png)
 
-![Tomasulo_Tabelle - page 5](Tomasulo_Tabelle/Tomasulo_Tabelle - page 5.png)
+![Tomasulo_Tabelle - page 5](Tomasulo_Tabelle/tomasulo_05.png)
 
-![Tomasulo_Tabelle - page 6](Tomasulo_Tabelle/Tomasulo_Tabelle - page 6.png)
+![Tomasulo_Tabelle - page 6](Tomasulo_Tabelle/tomasulo_06.png)
 
-![Tomasulo_Tabelle - page 7](Tomasulo_Tabelle/Tomasulo_Tabelle - page 7.png)
+![Tomasulo_Tabelle - page 7](Tomasulo_Tabelle/tomasulo_07.png)
 
-![Tomasulo_Tabelle - page 8](Tomasulo_Tabelle/Tomasulo_Tabelle - page 8.png)
+![Tomasulo_Tabelle - page 8](Tomasulo_Tabelle/tomasulo_08.png)
 
 ### Aufgabe 2
 
