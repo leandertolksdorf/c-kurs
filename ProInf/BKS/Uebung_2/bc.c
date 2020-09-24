@@ -1,25 +1,28 @@
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef enum { Add = '+', Sub = '-', Mul = '*', Div = '/' } Operator;
+
 // validate operator
-int validateOperator(char op) {
-    return op == '+' || op == '-' || op == '*' || op == '/';
+int isOperator(Operator op) {
+    return op == Add || op == Sub || op == Mul || op == Div;
 }
 
 // calculate integer operation
-int calculate(char op, int a, int b) {
+int calculate(Operator op, int a, int b) {
     switch (op) {
-        case '+':
+        case Add:
             return a + b;
-        case '-':
+        case Sub:
             return a - b;
-        case '*':
+        case Mul:
             return a * b;
-        case '/':
+        case Div:
             return a / b;
+        // shouldn't occur with prior validation
         default:
-            // default case shouldn't occur with prior validation
             return 0;
     }
 }
@@ -39,18 +42,19 @@ void processStream(FILE* input) {
     while (1) {
         // parse line
         argsParsed = fscanf(input, "%i %c %i", &a, &op, &b);
-        // end of file
+        // break on end of file
         if (argsParsed == EOF) {
             break;
         }
-        // no arguments parsed from line (invalid)
+        // advance if no arguments parsed (invalid line)
         if (argsParsed == 0) {
-            // read line with fgets to advance stdin position indicator
+            // read line with fgets to advance stream position indicator
             fgets(s, 256, input);
             continue;
         }
-        // calculate result
-        if (validateOperator(op)) {
+        // validate operator and print result
+        bool operatorValid = isOperator(op);
+        if (operatorValid) {
             int result = calculate(op, a, b);
             printf("%i\n", result);
         } else {
