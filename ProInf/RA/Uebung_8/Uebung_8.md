@@ -4,21 +4,21 @@
 
 ### Aufgabe 1
 
-![Tomasulo_Tabelle - page 1](Tomasulo_Tabelle/Tomasulo_Tabelle - page 1.png)
+![Tomasulo_Tabelle - page 1](Tomasulo_Tabelle/tomasulo_01.png)
 
-![Tomasulo_Tabelle - page 2](Tomasulo_Tabelle/Tomasulo_Tabelle - page 2.png)
+![Tomasulo_Tabelle - page 2](Tomasulo_Tabelle/tomasulo_02.png)
 
-![Tomasulo_Tabelle - page 3](Tomasulo_Tabelle/Tomasulo_Tabelle - page 3.png)
+![Tomasulo_Tabelle - page 3](Tomasulo_Tabelle/tomasulo_03.png)
 
-![Tomasulo_Tabelle - page 4](Tomasulo_Tabelle/Tomasulo_Tabelle - page 4.png)
+![Tomasulo_Tabelle - page 4](Tomasulo_Tabelle/tomasulo_04.png)
 
-![Tomasulo_Tabelle - page 5](Tomasulo_Tabelle/Tomasulo_Tabelle - page 5.png)
+![Tomasulo_Tabelle - page 5](Tomasulo_Tabelle/tomasulo_05.png)
 
-![Tomasulo_Tabelle - page 6](Tomasulo_Tabelle/Tomasulo_Tabelle - page 6.png)
+![Tomasulo_Tabelle - page 6](Tomasulo_Tabelle/tomasulo_06.png)
 
-![Tomasulo_Tabelle - page 7](Tomasulo_Tabelle/Tomasulo_Tabelle - page 7.png)
+![Tomasulo_Tabelle - page 7](Tomasulo_Tabelle/tomasulo_07.png)
 
-![Tomasulo_Tabelle - page 8](Tomasulo_Tabelle/Tomasulo_Tabelle - page 8.png)
+![Tomasulo_Tabelle - page 8](Tomasulo_Tabelle/tomasulo_08.png)
 
 ### Aufgabe 2
 
@@ -153,4 +153,3 @@ Die einfache Pipeline braucht für die Abarbeitung 9 Takte mehr als die superska
 - Eine Vergrößerung der IF- und ID-Einheiten würde die Abarbeitung beschleunigen, da dann bei Dependencies im IW mehr Alternativen zur Auswahl stünden. In Takt 4 könnte sich dann Instruktion 4 schon in Ausführung befinden.
 - Anpassung der FCFS-Richtlinie, sodass zukünftige Abhängigkeiten beachtet werden. Das heißt zum Beispiel: Ist 4 von 3 abhängig und nichts von 2, so sollte 3 vor 2 ausgeführt werden, um möglichst schnell die Ausführung von 4 zu ermöglichen.
 - Forwarding zwischen den Ausführungseinheiten
-
