@@ -29,7 +29,7 @@ int calculate(Operator op, int a, int b) {
     }
 }
 
-// calculate lines from stream
+// parse lines, calculate and print results from stream
 void processStream(FILE* input) {
     // operands and operator
     int a;
