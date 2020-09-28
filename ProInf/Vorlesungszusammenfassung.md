@@ -52,13 +52,37 @@
 
 ### Sequentielle & Verschachtelte Interrupts
 
-### 
+### System Calls
+
+#### Implementierung von System Calls
+
+### Context / Mode / Process Switch
 
 ### Questions & Tasks
 
-
-
 ## Vorlesung 3
+
+### Definition: Prozess
+
+### Programm vs. Prozess
+
+### Aufgaben eines OS in Bezug auf Prozesse
+
+### Ausführung von Prozessen
+
+### Prozesssmodell
+
+#### Einfaches Prozessmodell
+
+#### Erweitertes Prozessmodell
+
+### Process Control Block (PCB)
+
+### Gründe für Prozesserstellung
+
+### Prozessbeendigung
+
+
 
 ## Vorlesung 4
 

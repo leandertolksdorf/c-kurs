@@ -1,3 +1,5 @@
+// Felix Suhl, Leander Tolksdorf
+
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
